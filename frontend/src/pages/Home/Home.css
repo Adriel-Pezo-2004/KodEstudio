@@ -1,0 +1,18 @@
+.hero-section {
+  background: linear-gradient(135deg, #6610f2 0%, #4a148c 100%);
+  padding: 8rem 0 4rem 0;
+  margin-bottom: 0;
+}
+
+.min-vh-50 {
+  min-height: 50vh;
+}
+
+.services-section {
+  background-color: #f8f9fa;
+}
+
+h2 {
+  color: #333;
+  font-weight: 600;
+}

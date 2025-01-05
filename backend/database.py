@@ -213,3 +213,60 @@ class DatabaseManager:
         except Exception as e:
             logger.error(f"Error getting requirements statistics: {str(e)}")
             raise
+    
+    @staticmethod
+    def validate_requirement_data(data):
+        """Validate required fields in requirement data"""
+        required_fields = [
+            'date', 'projectTitle', 'requestorName', 'requestorPhone',
+            'requestorEmail', 'department', 'sponsorName', 'sponsorPhone',
+            'sponsorEmail', 'description', 'dependencies', 'requestedEndDate',
+            'estimatedBudget', 'status', 'priority', 'projectType',
+            'technicalRequirements', 'businessJustification', 'riskAssessment'
+        ]
+        
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
+        
+        return True
+
+    def insert_project_requirement(self, form_data):
+        """
+        Insert a new project requirement into the database
+        """
+        try:
+            self.validate_requirement_data(form_data)
+            
+            # Add metadata
+            form_data['created_at'] = datetime.utcnow()
+            form_data['updated_at'] = datetime.utcnow()
+            
+            result = self.collection.insert_one(form_data)
+            logger.info(f"Successfully inserted requirement with ID: {result.inserted_id}")
+            return str(result.inserted_id)
+        except Exception as e:
+            logger.error(f"Error inserting project requirement: {str(e)}")
+            raise
+
+    def update_project_requirement(self, requirement_id, update_data):
+        """
+        Update an existing project requirement
+        """
+        try:
+            self.validate_requirement_data(update_data)
+            update_data['updated_at'] = datetime.utcnow()
+            
+            result = self.collection.update_one(
+                {"_id": ObjectId(requirement_id)},
+                {"$set": update_data}
+            )
+            
+            if result.matched_count > 0:
+                logger.info(f"Successfully updated requirement: {requirement_id}")
+                return True
+            logger.warning(f"No requirement found with ID: {requirement_id}")
+            return False
+        except Exception as e:
+            logger.error(f"Error updating project requirement: {str(e)}")
+            raise

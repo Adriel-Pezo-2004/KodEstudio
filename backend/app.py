@@ -22,6 +22,37 @@ db_manager = DatabaseManager()
 def handle_invalid_id(error):
     return jsonify({'error': 'Invalid requirement ID format'}), 400
 
+# backend/app.py
+
+@app.route('/api/submit-requirements', methods=['POST'])
+def submit_requirements():
+    try:
+        data = request.json
+        requirement_id = db_manager.insert_project_requirement(data)
+        return jsonify({
+            'message': 'Requirement created successfully',
+            'requirement_id': requirement_id
+        }), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error creating requirement: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/requirements/<requirement_id>', methods=['PUT'])
+def update_requirement(requirement_id):
+    try:
+        data = request.json
+        success = db_manager.update_project_requirement(requirement_id, data)
+        if success:
+            return jsonify({'message': 'Requirement updated successfully'}), 200
+        return jsonify({'error': 'Requirement not found'}), 404
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error updating requirement: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
 # Route handlers
 @app.route('/api/requirements', methods=['POST'])
 def create_requirement():
@@ -79,18 +110,6 @@ def get_requirement(requirement_id):
         return jsonify({'error': 'Requirement not found'}), 404
     except Exception as e:
         logger.error(f"Error retrieving requirement: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
-
-@app.route('/api/requirements/<requirement_id>', methods=['PUT'])
-def update_requirement(requirement_id):
-    try:
-        data = request.json
-        success = db_manager.update_project_requirement(requirement_id, data)
-        if success:
-            return jsonify({'message': 'Requirement updated successfully'}), 200
-        return jsonify({'error': 'Requirement not found'}), 404
-    except Exception as e:
-        logger.error(f"Error updating requirement: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/requirements/<requirement_id>', methods=['DELETE'])

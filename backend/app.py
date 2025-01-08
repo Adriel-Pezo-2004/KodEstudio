@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from database import DatabaseManager, client
+from database import DatabaseManager
 import logging
 from datetime import datetime
 from bson.errors import InvalidId
@@ -12,7 +12,15 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Initialize database manager
 db_manager = DatabaseManager()
@@ -21,8 +29,6 @@ db_manager = DatabaseManager()
 @app.errorhandler(InvalidId)
 def handle_invalid_id(error):
     return jsonify({'error': 'Invalid requirement ID format'}), 400
-
-# backend/app.py
 
 @app.route('/api/submit-requirements', methods=['POST'])
 def submit_requirements():
@@ -39,57 +45,24 @@ def submit_requirements():
         logger.error(f"Error creating requirement: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
-@app.route('/api/requirements/<requirement_id>', methods=['PUT'])
-def update_requirement(requirement_id):
-    try:
-        data = request.json
-        success = db_manager.update_project_requirement(requirement_id, data)
-        if success:
-            return jsonify({'message': 'Requirement updated successfully'}), 200
-        return jsonify({'error': 'Requirement not found'}), 404
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        logger.error(f"Error updating requirement: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
-
-# Route handlers
-@app.route('/api/requirements', methods=['POST'])
-def create_requirement():
-    try:
-        data = request.json
-        requirement_id = db_manager.insert_project_requirement(data)
-        return jsonify({
-            'message': 'Requirement created successfully',
-            'requirement_id': requirement_id
-        }), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        logger.error(f"Error creating requirement: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
-
 @app.route('/api/requirements', methods=['GET'])
 def get_requirements():
     try:
-        # Parse query parameters
+        # Parse query parameters with defaults
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 10))
         
-        # Parse filters
+        # Build filters dictionary
         filters = {}
-        if request.args.get('status'):
-            filters['status'] = request.args.get('status')
-        if request.args.get('priority'):
-            filters['priority'] = request.args.get('priority')
-        if request.args.get('department'):
-            filters['department'] = request.args.get('department')
-            
+        for field in ['status', 'priority', 'department']:
+            if request.args.get(field):
+                filters[field] = request.args.get(field)
+        
         # Parse sorting
         sort_by = {}
         if request.args.get('sort_field'):
             sort_by[request.args.get('sort_field')] = int(request.args.get('sort_direction', 1))
-            
+        
         result = db_manager.get_all_project_requirements(
             filters=filters,
             sort_by=sort_by,
@@ -97,6 +70,8 @@ def get_requirements():
             per_page=per_page
         )
         return jsonify(result), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         logger.error(f"Error retrieving requirements: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
@@ -110,6 +85,20 @@ def get_requirement(requirement_id):
         return jsonify({'error': 'Requirement not found'}), 404
     except Exception as e:
         logger.error(f"Error retrieving requirement: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/requirements/<requirement_id>', methods=['PUT'])
+def update_requirement(requirement_id):
+    try:
+        data = request.json
+        success = db_manager.update_project_requirement(requirement_id, data)
+        if success:
+            return jsonify({'message': 'Requirement updated successfully'}), 200
+        return jsonify({'error': 'Requirement not found'}), 404
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error updating requirement: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/requirements/<requirement_id>', methods=['DELETE'])
@@ -129,7 +118,7 @@ def search_requirements():
         search_term = request.args.get('q', '')
         if not search_term:
             return jsonify({'error': 'Search term is required'}), 400
-            
+        
         results = db_manager.search_requirements(search_term)
         return jsonify({'results': results}), 200
     except Exception as e:
@@ -144,10 +133,6 @@ def get_stats():
     except Exception as e:
         logger.error(f"Error retrieving stats: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
-
-@app.teardown_appcontext
-def close_mongo_connection(exception):
-    client.close()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

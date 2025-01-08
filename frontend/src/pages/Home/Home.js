@@ -34,7 +34,7 @@ const Home = () => {
               <p className="lead text-white mb-4">Transformando ideas en soluciones digitales</p>
               <button 
                 className="btn btn-light btn-lg"
-                onClick={() => navigate('/requeriments')}
+                onClick={() => navigate('/requirements')}
               >
                 Comenzar Proyecto
               </button>

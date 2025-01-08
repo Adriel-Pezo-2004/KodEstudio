@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RequirementsForm = ({ editMode = false, requirementId = null }) => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const RequirementsForm = ({ editMode = false, requirementId = null }) => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (editMode && requirementId) {
@@ -96,51 +98,50 @@ const RequirementsForm = ({ editMode = false, requirementId = null }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError('');
+      e.preventDefault();
       
-      const url = editMode 
-        ? `/api/requirements/${requirementId}`
-        : '/api/submit-requirements';
-        
-      const method = editMode ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
-        setSuccess(editMode ? 'Requirement updated successfully!' : 'Requirement submitted successfully!');
-        
-        // Clear form if it's a new submission
-        if (!editMode) {
-          setFormData(initialFormState);
-        }
-        
-        // Optionally navigate to a success page or requirements list
-        setTimeout(() => {
-          navigate('/requirements-list');
-        }, 2000);
-      } else {
-        throw new Error('Failed to submit requirement');
+      if (!validateForm()) {
+        return;
       }
-    } catch (error) {
-      setError('Error: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
+
+      try {
+        setLoading(true);
+        setError('');
+        
+        const url = editMode 
+          ? `/api/requirements/${requirementId}`
+          : 'http://localhost:5000/api/submit-requirements';
+          
+        const method = editMode ? 'PUT' : 'POST';
+        
+        const response = await axios({
+          method,
+          url,
+          data: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.status === 201 || response.status === 200) {
+          setSuccess(editMode ? 'Requirement updated successfully!' : 'Requirement submitted successfully!');
+          setMessage('Requirement submitted successfully!');
+          
+          if (!editMode) {
+            setFormData(initialFormState);
+          }
+          
+          setTimeout(() => {
+            navigate('/requirements-list');
+          }, 2000);
+        }
+      } catch (error) {
+        setError('Error: ' + (error.response?.data?.error || error.message));
+        setMessage('Error submitting requirement.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
   };
 
   if (loading) {
@@ -446,6 +447,7 @@ const RequirementsForm = ({ editMode = false, requirementId = null }) => {
               </Button>
             </div>
           </Form>
+          {message && <p>{message}</p>}
         </Card.Body>
       </Card>
     </Container>

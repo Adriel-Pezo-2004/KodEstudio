@@ -3,24 +3,23 @@ from bson import ObjectId
 from datetime import datetime
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# MongoDB connection configuration
-MONGO_URI = 'mongodb://localhost:27017'
-
-try:
-    client = MongoClient(MONGO_URI)
-    db = client['KodEstudio']
-    logger.info("Successfully connected to MongoDB")
-except Exception as e:
-    logger.error(f"Error connecting to MongoDB: {str(e)}")
-    raise
-
 class DatabaseManager:
+    _instance = None
+    
     def __init__(self):
-        self.collection = db['Solicitudes']  # Usando la colección correcta 'Solicitudes'
+        if not DatabaseManager._instance:
+            try:
+                self.client = MongoClient('mongodb://localhost:27017')
+                self.db = self.client['KodEstudio']
+                self.collection = self.db['Solicitudes']
+                DatabaseManager._instance = self
+                logger.info("Successfully connected to MongoDB")
+            except Exception as e:
+                logger.error(f"Error connecting to MongoDB: {str(e)}")
+                raise
 
     @staticmethod
     def serialize_object_id(item):
@@ -33,12 +32,11 @@ class DatabaseManager:
     def validate_requirement_data(data):
         """Validate required fields in requirement data"""
         required_fields = [
-            'projectTitle',
-            'requestorName',
-            'requestorEmail',
-            'department',
-            'description',
-            'requestedEndDate'
+            'date', 'projectTitle', 'requestorName', 'requestorPhone',
+            'requestorEmail', 'department', 'sponsorName', 'sponsorPhone',
+            'sponsorEmail', 'description', 'dependencies', 'requestedEndDate',
+            'estimatedBudget', 'status', 'priority', 'projectType',
+            'technicalRequirements', 'businessJustification', 'riskAssessment'
         ]
         
         missing_fields = [field for field in required_fields if field not in data]
@@ -48,16 +46,11 @@ class DatabaseManager:
         return True
 
     def insert_project_requirement(self, form_data):
-        """
-        Insert a new project requirement into the database
-        """
+        """Insert a new project requirement into the database"""
         try:
             self.validate_requirement_data(form_data)
-            
-            # Add metadata
             form_data['created_at'] = datetime.utcnow()
             form_data['updated_at'] = datetime.utcnow()
-            form_data['status'] = form_data.get('status', 'Pending')
             
             result = self.collection.insert_one(form_data)
             logger.info(f"Successfully inserted requirement with ID: {result.inserted_id}")
@@ -67,9 +60,7 @@ class DatabaseManager:
             raise
 
     def get_project_requirement(self, requirement_id):
-        """
-        Retrieve a specific project requirement by ID
-        """
+        """Retrieve a specific project requirement by ID"""
         try:
             requirement = self.collection.find_one({"_id": ObjectId(requirement_id)})
             if requirement:
@@ -80,11 +71,12 @@ class DatabaseManager:
             raise
 
     def get_all_project_requirements(self, filters=None, sort_by=None, page=1, per_page=10):
-        """
-        Retrieve all project requirements with optional filtering and pagination
-        """
+        """Retrieve all project requirements with optional filtering and pagination"""
         try:
             query = filters if filters else {}
+            
+            # Get total count for pagination
+            total_documents = self.collection.count_documents(query)
             
             # Calculate skip value for pagination
             skip = (page - 1) * per_page
@@ -98,32 +90,24 @@ class DatabaseManager:
                 sort_params = [('created_at', -1)]
             
             # Execute query with pagination
-            cursor = self.collection.find(query)
-            total = cursor.count()
-            
-            requirements = list(cursor.sort(sort_params)
-                              .skip(skip)
-                              .limit(per_page))
-            
-            # Serialize ObjectIds
-            requirements = [self.serialize_object_id(req) for req in requirements]
+            cursor = self.collection.find(query).sort(sort_params).skip(skip).limit(per_page)
+            requirements = [self.serialize_object_id(req) for req in cursor]
             
             return {
                 'requirements': requirements,
-                'total': total,
+                'total': total_documents,
                 'page': page,
                 'per_page': per_page,
-                'total_pages': -(-total // per_page)
+                'total_pages': -(-total_documents // per_page)  # Ceiling division
             }
         except Exception as e:
             logger.error(f"Error retrieving project requirements: {str(e)}")
             raise
 
     def update_project_requirement(self, requirement_id, update_data):
-        """
-        Update an existing project requirement
-        """
+        """Update an existing project requirement"""
         try:
+            self.validate_requirement_data(update_data)
             update_data['updated_at'] = datetime.utcnow()
             
             result = self.collection.update_one(
@@ -141,9 +125,7 @@ class DatabaseManager:
             raise
 
     def delete_project_requirement(self, requirement_id):
-        """
-        Delete a project requirement
-        """
+        """Delete a project requirement"""
         try:
             result = self.collection.delete_one({"_id": ObjectId(requirement_id)})
             if result.deleted_count > 0:
@@ -156,9 +138,7 @@ class DatabaseManager:
             raise
 
     def search_requirements(self, search_term):
-        """
-        Search project requirements by various fields
-        """
+        """Search project requirements by various fields"""
         try:
             query = {
                 "$or": [
@@ -169,23 +149,21 @@ class DatabaseManager:
                 ]
             }
             
-            results = list(self.collection.find(query))
-            return [self.serialize_object_id(req) for req in results]
+            cursor = self.collection.find(query)
+            requirements = [self.serialize_object_id(req) for req in cursor]
+            return requirements
         except Exception as e:
             logger.error(f"Error searching requirements: {str(e)}")
             raise
 
     def get_requirements_stats(self):
-        """
-        Get statistics about project requirements
-        """
+        """Get statistics about project requirements"""
         try:
             stats = {
                 'total_requirements': self.collection.count_documents({}),
                 'status_counts': {},
                 'priority_counts': {},
-                'department_counts': {},
-                'monthly_submissions': []
+                'department_counts': {}
             }
             
             # Status counts
@@ -212,61 +190,4 @@ class DatabaseManager:
             return stats
         except Exception as e:
             logger.error(f"Error getting requirements statistics: {str(e)}")
-            raise
-    
-    @staticmethod
-    def validate_requirement_data(data):
-        """Validate required fields in requirement data"""
-        required_fields = [
-            'date', 'projectTitle', 'requestorName', 'requestorPhone',
-            'requestorEmail', 'department', 'sponsorName', 'sponsorPhone',
-            'sponsorEmail', 'description', 'dependencies', 'requestedEndDate',
-            'estimatedBudget', 'status', 'priority', 'projectType',
-            'technicalRequirements', 'businessJustification', 'riskAssessment'
-        ]
-        
-        missing_fields = [field for field in required_fields if field not in data]
-        if missing_fields:
-            raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
-        
-        return True
-
-    def insert_project_requirement(self, form_data):
-        """
-        Insert a new project requirement into the database
-        """
-        try:
-            self.validate_requirement_data(form_data)
-            
-            # Add metadata
-            form_data['created_at'] = datetime.utcnow()
-            form_data['updated_at'] = datetime.utcnow()
-            
-            result = self.collection.insert_one(form_data)
-            logger.info(f"Successfully inserted requirement with ID: {result.inserted_id}")
-            return str(result.inserted_id)
-        except Exception as e:
-            logger.error(f"Error inserting project requirement: {str(e)}")
-            raise
-
-    def update_project_requirement(self, requirement_id, update_data):
-        """
-        Update an existing project requirement
-        """
-        try:
-            self.validate_requirement_data(update_data)
-            update_data['updated_at'] = datetime.utcnow()
-            
-            result = self.collection.update_one(
-                {"_id": ObjectId(requirement_id)},
-                {"$set": update_data}
-            )
-            
-            if result.matched_count > 0:
-                logger.info(f"Successfully updated requirement: {requirement_id}")
-                return True
-            logger.warning(f"No requirement found with ID: {requirement_id}")
-            return False
-        except Exception as e:
-            logger.error(f"Error updating project requirement: {str(e)}")
             raise

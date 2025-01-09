@@ -45,6 +45,22 @@ class DatabaseManager:
         
         return True
 
+    @staticmethod
+    def validate_update_data(data):
+        """Validates update data for project requirements."""
+        valid_fields = {
+            'date', 'projectTitle', 'requestorName', 'requestorPhone',
+            'requestorEmail', 'department', 'sponsorName', 'sponsorPhone',
+            'sponsorEmail', 'description', 'dependencies', 'requestedEndDate',
+            'estimatedBudget', 'status', 'priority', 'projectType',
+            'technicalRequirements', 'businessJustification', 'riskAssessment',
+            '_id', 'created_at', 'updated_at'  # Allow these fields for updates
+        }
+
+        invalid_fields = [field for field in data.keys() if field not in valid_fields]
+        if invalid_fields:
+            raise ValueError(f"Invalid fields provided: {', '.join(invalid_fields)}")
+
     def insert_project_requirement(self, form_data):
         """Insert a new project requirement into the database"""
         try:
@@ -107,7 +123,7 @@ class DatabaseManager:
     def update_project_requirement(self, requirement_id, update_data):
         """Update an existing project requirement"""
         try:
-            self.validate_requirement_data(update_data)
+            self.validate_update_data(update_data)
             update_data['updated_at'] = datetime.utcnow()
             
             result = self.collection.update_one(

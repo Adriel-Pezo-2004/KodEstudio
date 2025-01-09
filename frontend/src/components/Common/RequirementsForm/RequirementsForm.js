@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Form, Button, Card, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const RequirementsForm = ({ editMode = false, requirementId = null }) => {
+const RequirementsForm = () => {
+  const { id } = useParams();
+  const editMode = Boolean(id);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
 
   const initialFormState = {
     date: '',
@@ -34,28 +38,33 @@ const RequirementsForm = ({ editMode = false, requirementId = null }) => {
   const [formData, setFormData] = useState(initialFormState);
   const [message, setMessage] = useState('');
 
+  const fetchRequirementData = useCallback(async () => {
+    try {
+        setLoading(true);
+        const url = `http://localhost:5000/api/requirements/${id}`;
+        console.log('URL being accessed:', url); // Para ver la URL exacta
+        console.log('ID value:', id); // Para verificar el valor del ID
+        
+        const response = await axios.get(url);
+        if (response.data) {
+            console.log('Response data:', response.data); // Para ver la respuesta cuando funcione
+            setFormData(response.data);
+        } else {
+            throw new Error('Failed to fetch requirement data');
+        }
+    } catch (error) {
+        console.error('Detailed error:', error.response || error); // Para ver más detalles del error
+        setError('Error loading requirement data: ' + error.message);
+    } finally {
+        setLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
-    if (editMode && requirementId) {
+    if (editMode && id) {
       fetchRequirementData();
     }
-  }, [editMode, requirementId]);
-
-  const fetchRequirementData = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/requirements/${requirementId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(data);
-      } else {
-        throw new Error('Failed to fetch requirement data');
-      }
-    } catch (error) {
-      setError('Error loading requirement data: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [editMode, id, fetchRequirementData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,50 +107,49 @@ const RequirementsForm = ({ editMode = false, requirementId = null }) => {
   };
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      if (!validateForm()) {
+    e.preventDefault();
+    
+    if (!validateForm()) {
         return;
-      }
+    }
 
-      try {
+    try {
         setLoading(true);
         setError('');
         
         const url = editMode 
-          ? `/api/requirements/${requirementId}`
-          : 'http://localhost:5000/api/submit-requirements';
-          
-        const method = editMode ? 'PUT' : 'POST';
+            ? `http://localhost:5000/api/requirements/${id}`
+            : 'http://localhost:5000/api/submit-requirements';
+            
+        const method = editMode ? 'put' : 'post';
         
         const response = await axios({
-          method,
-          url,
-          data: formData,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+            method,
+            url,
+            data: formData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
         
         if (response.status === 201 || response.status === 200) {
-          setSuccess(editMode ? 'Requirement updated successfully!' : 'Requirement submitted successfully!');
-          setMessage('Requirement submitted successfully!');
-          
-          if (!editMode) {
-            setFormData(initialFormState);
-          }
-          
-          setTimeout(() => {
-            navigate('/requirements-list');
-          }, 2000);
+            setSuccess(editMode ? 'Requirement updated successfully!' : 'Requirement submitted successfully!');
+            
+            if (!editMode) {
+                setFormData(initialFormState);
+            }
+            
+            // Redirigir después de un breve delay para mostrar el mensaje de éxito
+            setTimeout(() => {
+                navigate('/requirements-list');
+            }, 2000);
         }
-      } catch (error) {
+    } catch (error) {
+        console.error('Submit error:', error);
         setError('Error: ' + (error.response?.data?.error || error.message));
-        setMessage('Error submitting requirement.');
-        console.error(error);
-      } finally {
+    } finally {
         setLoading(false);
-      }
+    }
   };
 
   if (loading) {

@@ -96,10 +96,11 @@ def update_requirement(requirement_id):
             return jsonify({'message': 'Requirement updated successfully'}), 200
         return jsonify({'error': 'Requirement not found'}), 404
     except ValueError as e:
+        logger.warning(f"Validation error: {e}")
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        logger.error(f"Error updating requirement: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
+        logger.error(f"Unexpected error: {e}")
+        return jsonify({'error': 'Unexpected error occurred'}), 500
 
 @app.route('/api/requirements/<requirement_id>', methods=['DELETE'])
 def delete_requirement(requirement_id):

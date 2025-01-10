@@ -124,11 +124,14 @@ class DatabaseManager:
         """Update an existing project requirement"""
         try:
             self.validate_update_data(update_data)
-            update_data['updated_at'] = datetime.utcnow()
+            # Create a copy of the update data and remove _id if present
+            clean_update_data = update_data.copy()
+            clean_update_data.pop('_id', None)  # Remove _id if it exists
+            clean_update_data['updated_at'] = datetime.utcnow()
             
             result = self.collection.update_one(
                 {"_id": ObjectId(requirement_id)},
-                {"$set": update_data}
+                {"$set": clean_update_data}
             )
             
             if result.matched_count > 0:

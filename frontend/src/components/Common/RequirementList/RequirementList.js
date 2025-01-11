@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Table, Badge, Button, Form, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,12 +9,8 @@ const RequirementList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [filters, setFilters] = useState({
-    status: '',
-    priority: '',
-    department: ''
-  });
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
   const getPriorityBadgeVariant = (priority) => {
@@ -38,9 +34,10 @@ const RequirementList = () => {
     return variants[status] || 'secondary';
   };
 
-  const fetchRequirements = async () => {
+  const fetchRequirements = useCallback(async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
       let url = `http://localhost:5000/api/requirements?page=${currentPage}`;
       
       // Add filters to URL
@@ -52,7 +49,11 @@ const RequirementList = () => {
         url = `http://localhost:5000/api/requirements/search?q=${searchTerm}`;
       }
 
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }        
+      });
       
       if (searchTerm) {
         setRequirements(response.data.results);
@@ -66,11 +67,11 @@ const RequirementList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, filters, searchTerm]);
 
   useEffect(() => {
     fetchRequirements();
-  }, [currentPage, filters, searchTerm]);
+  }, [currentPage, filters, searchTerm, fetchRequirements]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -93,13 +94,26 @@ const RequirementList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this requirement?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/requirements/${id}`);
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/api/requirements/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         fetchRequirements();
       } catch (err) {
         setError('Error deleting requirement: ' + err.message);
       }
     }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <Container className="py-4">

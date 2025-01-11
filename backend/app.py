@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from database import DatabaseManager
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from bson.errors import InvalidId
 from bson import ObjectId
+import jwt
+from functools import wraps
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -12,13 +14,14 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'  # Cambia esto por una clave secreta segura
 
 # Configure CORS
 CORS(app, resources={
     r"/api/*": {
         "origins": ["http://localhost:3000"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
+        "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
@@ -29,6 +32,53 @@ db_manager = DatabaseManager()
 @app.errorhandler(InvalidId)
 def handle_invalid_id(error):
     return jsonify({'error': 'Invalid requirement ID format'}), 400
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'error': 'Token is missing!'}), 403
+        try:
+            token = token.split(" ")[1]  # Remove 'Bearer' prefix
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            current_user = db_manager.get_user_by_id(data['user_id'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'error': 'Token has expired!'}), 403
+        except jwt.InvalidTokenError:
+            return jsonify({'error': 'Token is invalid!'}), 403
+        except Exception as e:
+            logger.error(f"Token error: {str(e)}")
+            return jsonify({'error': 'Token is invalid!'}), 403
+        return f(current_user, *args, **kwargs)
+    return decorated
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        auth = request.json
+        print("Datos recibidos:", auth)  # Para debug
+
+        if not auth or not auth.get('username') or not auth.get('password'):
+            return jsonify({'error': 'Missing username or password'}), 401
+
+        user = db_manager.get_user_by_username(auth.get('username'))
+        if not user:
+            return jsonify({'error': 'User not found'}), 401
+
+        if not db_manager.verify_password(user['password'], auth.get('password')):
+            return jsonify({'error': 'Invalid password'}), 401
+
+        token = jwt.encode({
+            'user_id': str(user['_id']),
+            'exp': datetime.utcnow() + timedelta(hours=1)
+        }, app.config['SECRET_KEY'], algorithm="HS256")
+
+        return jsonify({'token': token})
+
+    except Exception as e:
+        print("Error:", str(e))  # Para debug
+        return jsonify({'error': 'Authentication failed'}), 401
 
 @app.route('/api/submit-requirements', methods=['POST'])
 def submit_requirements():
@@ -46,7 +96,8 @@ def submit_requirements():
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/requirements', methods=['GET'])
-def get_requirements():
+@token_required
+def get_requirements(current_user):
     try:
         # Parse query parameters with defaults
         page = int(request.args.get('page', 1))

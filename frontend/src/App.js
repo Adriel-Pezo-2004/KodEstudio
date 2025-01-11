@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import RequirementsForm from './components/Common/RequirementsForm/RequirementsForm';
 import RequirementList from './components/Common/RequirementList/RequirementList';
+import Login from './components/Login/Login';
 import './App.css';
 
 function App() {
@@ -23,8 +24,16 @@ function App() {
                 <RequirementsForm />
               </div>
             } />
-            <Route path="/requirements-list" element={<RequirementList />} />
+            <Route path="/requirements-list" element={
+              <div className="container py-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  
+                </div>
+                <RequirementList />
+              </div>
+            } />
             <Route path="/edit-requirement/:id" element={<RequirementsForm />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
         <Footer />

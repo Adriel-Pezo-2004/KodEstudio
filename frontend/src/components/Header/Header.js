@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
+  const handleLogoutClick = (e) => {
+    if (!window.confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container">
@@ -23,10 +29,13 @@ const Header = () => {
               <Link className="nav-link active" to="/">Inicio</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/servicios">Servicios</Link>
+              <Link className="nav-link" to="/requirements-list">Servicios</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contacto">Contacto</Link>
+              <Link className="nav-link text-success" to="/login">Login</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link text-danger" to="/logout" onClick={handleLogoutClick}>Logout</Link>
             </li>
           </ul>
         </div>

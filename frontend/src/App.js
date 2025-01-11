@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer';
 import RequirementsForm from './components/Common/RequirementsForm/RequirementsForm';
 import RequirementList from './components/Common/RequirementList/RequirementList';
 import Login from './components/Login/Login';
+import Logout from './components/Logout/Logout';
 import './App.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             } />
             <Route path="/edit-requirement/:id" element={<RequirementsForm />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
           </Routes>
         </main>
         <Footer />

@@ -79,6 +79,12 @@ def login():
     except Exception as e:
         print("Error:", str(e))  # Para debug
         return jsonify({'error': 'Authentication failed'}), 401
+    
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    # En un sistema basado en JWT, el logout se maneja en el frontend
+    return jsonify({'message': 'Logged out successfully'}), 200
+
 
 @app.route('/api/submit-requirements', methods=['POST'])
 def submit_requirements():

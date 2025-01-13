@@ -29,3 +29,12 @@
     color: #666;
     line-height: 1.6;
 }
+
+.card h3 {
+    padding:10px 15px ;
+    align-items: center;
+}
+
+.card p {
+    padding: 0px 15px;
+}

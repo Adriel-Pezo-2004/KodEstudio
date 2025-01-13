@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './Login.css'; // Asegúrate de crear este archivo CSS
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -68,40 +69,50 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header text-center">
+              <h3>Login</h3>
+            </div>
+            <div className="card-body">
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
+              <form onSubmit={handleSubmit}>
+                <div className="form-group mb-3">
+                  <label htmlFor="username">Username</label>
+                  <input
+                    id="username"
+                    type="text"
+                    className="form-control"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    id="password"
+                    type="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block">
+                  Login
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group mb-3">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            className="form-control"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Login
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

@@ -57,16 +57,27 @@ def token_required(f):
 def login():
     try:
         auth = request.json
-        print("Datos recibidos:", auth)  # Para debug
+        print("Received login request with data:", {
+            'username': auth.get('username'),
+            'password': '***'  # No imprimimos la contraseña por seguridad
+        })
 
         if not auth or not auth.get('username') or not auth.get('password'):
+            print("Missing credentials")
             return jsonify({'error': 'Missing username or password'}), 401
 
         user = db_manager.get_user_by_username(auth.get('username'))
+        print("Found user:", {
+            '_id': str(user['_id']) if user and '_id' in user else None,
+            'username': user['username'] if user else None
+        })
+
         if not user:
+            print("User not found")
             return jsonify({'error': 'User not found'}), 401
 
         if not db_manager.verify_password(user['password'], auth.get('password')):
+            print("Invalid password")
             return jsonify({'error': 'Invalid password'}), 401
 
         token = jwt.encode({
@@ -74,17 +85,22 @@ def login():
             'exp': datetime.utcnow() + timedelta(hours=1)
         }, app.config['SECRET_KEY'], algorithm="HS256")
 
-        return jsonify({'token': token})
+        response_data = {
+            'token': token,
+            'username': user['username']
+        }
+        print("Sending response:", response_data)
+        
+        return jsonify(response_data)
 
     except Exception as e:
-        print("Error:", str(e))  # Para debug
+        print("Login error:", str(e))
         return jsonify({'error': 'Authentication failed'}), 401
-    
+
 @app.route('/api/logout', methods=['POST'])
 def logout():
     # En un sistema basado en JWT, el logout se maneja en el frontend
     return jsonify({'message': 'Logged out successfully'}), 200
-
 
 @app.route('/api/submit-requirements', methods=['POST'])
 def submit_requirements():

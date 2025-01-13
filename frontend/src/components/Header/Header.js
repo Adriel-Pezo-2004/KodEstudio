@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const username = localStorage.getItem('username');
+  console.log('Username retrieved:', username);  // Para debug
+
   const handleLogoutClick = (e) => {
     if (!window.confirm('¿Estás seguro de que deseas cerrar sesión?')) {
       e.preventDefault();
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      navigate('/login');
     }
   };
 
@@ -31,12 +39,20 @@ const Header = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/requirements-list">Servicios</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link text-success" to="/login">Login</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-danger" to="/logout" onClick={handleLogoutClick}>Logout</Link>
-            </li>
+            {username ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link">Hola, {username}</span>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link text-danger" to="/logout" onClick={handleLogoutClick}>Logout</Link>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <Link className="nav-link text-success" to="/login">Login</Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

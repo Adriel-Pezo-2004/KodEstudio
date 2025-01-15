@@ -16,3 +16,15 @@ h2 {
   color: #333;
   font-weight: 600;
 }
+
+h1.lenguajes-title {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #333;
+  transition: color 0.3s ease;
+  margin: 0.75rem;
+}
+
+h1.lenguajes-title:hover {
+  color: #6610f2;
+}

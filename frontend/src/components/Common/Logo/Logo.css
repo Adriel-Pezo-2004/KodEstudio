@@ -1,0 +1,36 @@
+.modern-logo {
+    border-radius: 16px;
+    cursor: pointer;
+    margin: 10px;
+    max-width: 100%;
+    text-align: center; /* Centrar el texto */
+}
+
+.logo-image-container {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: none;
+}
+
+.logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logo-content {
+    padding: 1.5rem;
+}
+
+.logo-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.logo-text {
+    color: inherit; /* Quitar color específico */
+    line-height: 1.6;
+    font-size: 1rem;
+}

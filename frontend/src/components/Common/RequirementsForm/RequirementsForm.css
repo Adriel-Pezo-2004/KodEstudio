@@ -1,0 +1,138 @@
+  .shadow-sm {
+    background-color: #F2AC57;
+    border-radius: 8px 8px 0 0 !important;
+  }
+  
+  .shadow-sm h2 {
+    color: white;
+    font-size: 1.75rem;
+    text-align: center;
+    padding: 1.5rem 0 1rem;
+  }
+  
+  .card-body {
+    padding: 2rem;
+  }
+  
+  /* Form Styles */
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    transition: border-color 0.2s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #F2AC57;
+    box-shadow: 0 0 0 0.2rem rgba(242, 172, 87, 0.25);
+    background-color: white;
+  }
+  
+  .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .form-select:focus {
+    border-color: #F2AC57;
+    box-shadow: 0 0 0 0.2rem rgba(242, 172, 87, 0.25);
+    background-color: white;
+  }
+  
+  /* Section Headers */
+  h4 {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #F2AC57;
+  }
+  
+  /* Alert Styles */
+  .alert {
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .alert-danger {
+    background-color: #fff2f2;
+    border-color: #ffcccc;
+    color: #dc3545;
+  }
+  
+  .alert-success {
+    background-color: #f2fff2;
+    border-color: #ccffcc;
+    color: #198754;
+  }
+  
+  /* Button Styles */
+  .btn {
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-primary {
+    background-color: #F2AC57;
+    border-color: #F2AC57;
+  }
+  
+  .btn-primary:hover {
+    background-color: #e09c47;
+    border-color: #e09c47;
+  }
+  
+  .btn-primary:disabled {
+    background-color: #F2AC57;
+    border-color: #F2AC57;
+    opacity: 0.65;
+  }
+  
+  .btn-secondary {
+    background-color: transparent;
+    border: 2px solid #6c757d;
+    color: #6c757d;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  /* Textarea Specific Styles */
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 1rem;
+    }
+    
+    .d-flex.justify-content-between {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+  }

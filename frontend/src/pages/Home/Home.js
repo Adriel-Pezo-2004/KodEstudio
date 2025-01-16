@@ -2,10 +2,24 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../../components/Common/Card/Card';
 import Logo from '../../components/Common/Logo/Logo';
+import { motion } from 'framer-motion';
 import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const slideInFromLeft = {
+    hidden: { x: -100, opacity: 0 },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: { 
+        type: "spring",
+        duration: 1,
+        bounce: 0.3
+      }
+    }
+  };
 
   const services = [
     {
@@ -43,17 +57,37 @@ const Home = () => {
   return (
     <>
       <section className="hero-section">
-        <div className="container">
+        <div className="hero-overlay"></div>
+        <div className="container position-relative">
           <div className="row min-vh-50 align-items-center">
             <div className="col-lg-6">
-              <h1 className="display-4 fw-bold text-white mb-4">Bienvenidos a Kod Estudio</h1>
-              <p className="lead text-white mb-4">Transformando ideas en soluciones digitales</p>
-              <button 
+              <motion.h1 
+                className="display-4 fw-bold text-white mb-4"
+                initial="hidden"
+                animate="visible"
+                variants={slideInFromLeft}
+              >
+                Bienvenidos a Kod Estudio
+              </motion.h1>
+              <motion.p 
+                className="lead text-white mb-4"
+                initial="hidden"
+                animate="visible"
+                variants={slideInFromLeft}
+                transition={{ delay: 0.2 }}
+              >
+                Transformando ideas en soluciones digitales
+              </motion.p>
+              <motion.button 
                 className="btn btn-light btn-lg"
                 onClick={() => navigate('/requirements')}
+                initial="hidden"
+                animate="visible"
+                variants={slideInFromLeft}
+                transition={{ delay: 0.4 }}
               >
                 Comenzar Proyecto
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>

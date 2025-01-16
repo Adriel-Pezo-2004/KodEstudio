@@ -3,6 +3,7 @@ import { Container, Form, Button, Card, Row, Col, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import './RequirementsForm.css';
 
 const RequirementsForm = () => {
   const { id } = useParams();
@@ -36,7 +37,7 @@ const RequirementsForm = () => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const [message, setMessage] = useState('');
+  const [message] = useState('');
 
   const fetchRequirementData = useCallback(async () => {
     try {
@@ -162,12 +163,12 @@ const RequirementsForm = () => {
 
   return (
     <Container className="py-4">
-      <Card className="shadow-sm">
-        <Card.Header>
-          <h2 className="text-center mb-0">
-            {editMode ? 'Edit Project Requirements' : 'New Project Requirements Form'}
+      <Card className="shadow">
+        <div className="shadow-sm">
+          <h2 className="header-sm">
+            {editMode ? 'Editar Solicitud de Proyecto' : 'Nueva Solicitud de Proyecto'}
           </h2>
-        </Card.Header>
+        </div>
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
           {success && <Alert variant="success">{success}</Alert>}
@@ -177,7 +178,7 @@ const RequirementsForm = () => {
             <Row className="mb-4">
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Date</Form.Label>
+                  <Form.Label>Día</Form.Label>
                   <Form.Control
                     type="date"
                     name="date"
@@ -189,7 +190,7 @@ const RequirementsForm = () => {
               </Col>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Project Title</Form.Label>
+                  <Form.Label>Título del Proyecto</Form.Label>
                   <Form.Control
                     type="text"
                     name="projectTitle"
@@ -201,30 +202,30 @@ const RequirementsForm = () => {
               </Col>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Project Type</Form.Label>
+                  <Form.Label>Tipo de Proyecto</Form.Label>
                   <Form.Select
                     name="projectType"
                     value={formData.projectType}
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Select Project Type</option>
-                    <option value="Development">Development</option>
-                    <option value="Infrastructure">Infrastructure</option>
-                    <option value="Research">Research</option>
-                    <option value="Maintenance">Maintenance</option>
-                    <option value="Other">Other</option>
+                    <option value="">Seleccione tipo de proyecto</option>
+                    <option value="Development">Desarollo App Móvil</option>
+                    <option value="Infrastructure">Desarollo Web</option>
+                    <option value="Research">Aplicación de Escritorio</option>
+                    <option value="Maintenance">Consultoría</option>
+                    <option value="Other">Otro</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
 
             {/* Requestor Information */}
-            <h4 className="mb-3">Requestor Information</h4>
+            <h4 className="mb-3">Información del Cliente</h4>
             <Row>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Nombre</Form.Label>
                   <Form.Control
                     type="text"
                     name="requestorName"
@@ -236,7 +237,7 @@ const RequirementsForm = () => {
               </Col>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Phone</Form.Label>
+                  <Form.Label>Celular</Form.Label>
                   <Form.Control
                     type="tel"
                     name="requestorPhone"
@@ -261,7 +262,7 @@ const RequirementsForm = () => {
             </Row>
 
             <Form.Group className="mb-4">
-              <Form.Label>Department</Form.Label>
+              <Form.Label>Ciudad</Form.Label>
               <Form.Control
                 type="text"
                 name="department"
@@ -272,11 +273,11 @@ const RequirementsForm = () => {
             </Form.Group>
 
             {/* Sponsor Information */}
-            <h4 className="mb-3">Sponsor Information</h4>
+            <h4 className="mb-3">Información del Promotor</h4>
             <Row>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Nombre</Form.Label>
                   <Form.Control
                     type="text"
                     name="sponsorName"
@@ -288,7 +289,7 @@ const RequirementsForm = () => {
               </Col>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Phone</Form.Label>
+                  <Form.Label>Celular</Form.Label>
                   <Form.Control
                     type="tel"
                     name="sponsorPhone"
@@ -313,21 +314,21 @@ const RequirementsForm = () => {
             </Row>
 
             {/* Project Details */}
-            <h4 className="mb-3">Project Details</h4>
+            <h4 className="mb-3">Detalles del Proyecto</h4>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Priority</Form.Label>
+                  <Form.Label>Prioridad</Form.Label>
                   <Form.Select
                     name="priority"
                     value={formData.priority}
                     onChange={handleChange}
                     required
                   >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Critical">Critical</option>
+                    <option value="Low">Bajo</option>
+                    <option value="Medium">Medio</option>
+                    <option value="High">Alto</option>
+                    <option value="Critical">Crítico</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -340,18 +341,17 @@ const RequirementsForm = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Rejected">Rejected</option>
+                    <option value="">Seleccione Status del Proyecto</option>
+                    <option value="Pending">Rechazado</option>
+                    <option value="Approved">Aprobado</option>
+                    <option value="In Progress">En Progreso</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>Project Description</Form.Label>
+              <Form.Label>Descripción del Proyecto</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}
@@ -363,7 +363,7 @@ const RequirementsForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Business Justification</Form.Label>
+              <Form.Label>Justificación</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -375,7 +375,7 @@ const RequirementsForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Technical Requirements</Form.Label>
+              <Form.Label>Requiremientos Técnicos</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -387,7 +387,7 @@ const RequirementsForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Dependencies</Form.Label>
+              <Form.Label>Dependencias</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -399,7 +399,7 @@ const RequirementsForm = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Risk Assessment</Form.Label>
+              <Form.Label>Evaluación de Riesgos</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -413,7 +413,7 @@ const RequirementsForm = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Requested End Date</Form.Label>
+                  <Form.Label>Fecha de Finalización Estimada</Form.Label>
                   <Form.Control
                     type="date"
                     name="requestedEndDate"
@@ -425,7 +425,7 @@ const RequirementsForm = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Estimated Budget</Form.Label>
+                  <Form.Label>Presupuesto Estimado</Form.Label>
                   <Form.Control
                     type="number"
                     name="estimatedBudget"

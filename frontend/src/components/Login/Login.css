@@ -1,16 +1,134 @@
-  .card {
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10vh;
+  min-height: 65vh;
+}
+
+.login-card {
+  display: flex;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 800px;
+  max-width: 100%;
+}
+
+.login-form-section {
+  flex: 1;
+  padding: 40px;
+}
+
+.welcome-section {
+  flex: 1;
+  background-color: #F2AC57;
+  color: white;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.forgot-password {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sign-in-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #323859;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.sign-in-button:hover {
+  background-color: #323859;
+}
+
+.sign-up-button {
+  padding: 8px 24px;
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+  transition: all 0.3s;
+}
+
+.sign-up-button:hover {
+  background: white;
+  color: #F2AC57;
+}
+
+.error-message {
+  background-color: #ffe6e6;
+  color: #ff0000;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    flex-direction: column;
   }
   
-  .card-header {
-    background-color: #007bff;
-    color: white;
-    border-bottom: none;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+  .welcome-section {
+    padding: 30px;
   }
-  
-  .btn-block {
-    width: 100%;
-  }
+}

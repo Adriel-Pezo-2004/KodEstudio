@@ -10,7 +10,7 @@ const Footer = () => {
             <p>Transformando ideas en soluciones digitales</p>
           </div>
           <div className="col-md-6 text-md-end">
-            <p>© 2024 Kod Estudio. Todos los derechos reservados.</p>
+            <p>© 2025 Kod Estudio. Todos los derechos reservados.</p>
           </div>
         </div>
       </div>

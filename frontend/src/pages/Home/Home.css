@@ -1,7 +1,19 @@
 .hero-section {
-  background: linear-gradient(135deg, #6610f2 0%, #4a148c 100%);
+  position: relative;
+  background-image: url('https://us.images.westend61.de/0001010573pw/low-angle-view-of-skyscrapers-ISF17133.jpg');  /* Reemplaza esto con la URL de tu imagen */
+  background-size: cover;
+  background-position: center;
   padding: 8rem 0 4rem 0;
   margin-bottom: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(50, 56, 89, 0.25) 0%, rgba(50, 56, 89, 0.75) 70%);
 }
 
 .min-vh-50 {
@@ -18,7 +30,7 @@ h2 {
 }
 
 h1.lenguajes-title {
-  font-size: 4rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #333;
   transition: color 0.3s ease;

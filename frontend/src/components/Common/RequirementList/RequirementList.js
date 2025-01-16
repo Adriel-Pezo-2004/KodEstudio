@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Table, Badge, Button, Form, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './RequirementList.css';
 
 const RequirementList = () => {
   const navigate = useNavigate();
@@ -15,21 +16,19 @@ const RequirementList = () => {
 
   const getPriorityBadgeVariant = (priority) => {
     const variants = {
-      'Low': 'info',
-      'Medium': 'warning',
-      'High': 'danger',
-      'Critical': 'dark'
+      'Bajo': 'dark',
+      'Medio': 'info',
+      'Alto': 'warning',
+      'Crítico': 'danger'
     };
     return variants[priority] || 'secondary';
   };
 
   const getStatusBadgeVariant = (status) => {
     const variants = {
-      'Pending': 'warning',
-      'Approved': 'success',
-      'In Progress': 'info',
-      'Completed': 'primary',
-      'Rejected': 'danger'
+      'Rechazado': 'warning',
+      'Aprobado': 'success',
+      'En Progreso': 'info',
     };
     return variants[status] || 'secondary';
   };
@@ -120,12 +119,12 @@ const RequirementList = () => {
       <Card className="shadow-sm">
         <Card.Header>
           <div className="d-flex justify-content-between align-items-center">
-            <h2 className="mb-0">Project Requirements</h2>
+            <h2 className="mb-0">Solicitudes de Proyecto</h2>
             <Button 
               variant="primary" 
               onClick={() => navigate('/requirements')}
             >
-              New Requirement
+              Crear Solicitud
             </Button>
           </div>
         </Card.Header>
@@ -138,7 +137,7 @@ const RequirementList = () => {
               <Form.Group>
                 <Form.Control
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Buscar..."
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
@@ -150,12 +149,10 @@ const RequirementList = () => {
                 value={filters.status}
                 onChange={handleFilterChange}
               >
-                <option value="">Filter by Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Rejected">Rejected</option>
+                <option value="">Filtrar por Status</option>
+                <option value="Rechazado">Rechazado</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="En Progreso">En Progreso</option>
               </Form.Select>
             </Col>
             <Col md={3}>
@@ -164,18 +161,18 @@ const RequirementList = () => {
                 value={filters.priority}
                 onChange={handleFilterChange}
               >
-                <option value="">Filter by Priority</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-                <option value="Critical">Critical</option>
+                <option value="">Filtrar por Prioridad</option>
+                <option value="Bajo">Bajo</option>
+                <option value="Medio">Medio</option>
+                <option value="Alto">Alto</option>
+                <option value="Crítico">Crítico</option>
               </Form.Select>
             </Col>
             <Col md={3}>
               <Form.Control
                 type="text"
                 name="department"
-                placeholder="Filter by Department"
+                placeholder="Filtrar por Departmento"
                 value={filters.department}
                 onChange={handleFilterChange}
               />
@@ -194,13 +191,13 @@ const RequirementList = () => {
                 <Table hover>
                   <thead>
                     <tr>
-                      <th>Project Title</th>
-                      <th>Department</th>
-                      <th>Requestor</th>
+                      <th>Título del Proyecto</th>
+                      <th>Ciudad</th>
+                      <th>Cliente</th>
                       <th>Status</th>
-                      <th>Priority</th>
-                      <th>End Date</th>
-                      <th>Actions</th>
+                      <th>Prioridad</th>
+                      <th>Fecha de Fin</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -227,14 +224,14 @@ const RequirementList = () => {
                             className="me-2"
                             onClick={() => handleEdit(req._id)}
                           >
-                            Edit
+                            Editar
                           </Button>
                           <Button
                             variant="outline-danger"
                             size="sm"
                             onClick={() => handleDelete(req._id)}
                           >
-                            Delete
+                            Eliminar
                           </Button>
                         </td>
                       </tr>

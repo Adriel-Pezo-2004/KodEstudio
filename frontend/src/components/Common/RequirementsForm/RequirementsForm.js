@@ -96,11 +96,11 @@ const RequirementsForm = () => {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.requestorEmail)) {
-      setError('Please enter a valid requestor email address');
+      setError('Ingrese una dirección de email válida');
       return false;
     }
     if (!emailRegex.test(formData.sponsorEmail)) {
-      setError('Please enter a valid sponsor email address');
+      setError('Ingrese una dirección de email válida');
       return false;
     }
 
@@ -134,7 +134,7 @@ const RequirementsForm = () => {
         });
         
         if (response.status === 201 || response.status === 200) {
-            setSuccess(editMode ? 'Requirement updated successfully!' : 'Requirement submitted successfully!');
+            setSuccess(editMode ? 'Solicitud actualizada' : 'Solicitud Aceptada');
             
             if (!editMode) {
                 setFormData(initialFormState);
@@ -210,11 +210,11 @@ const RequirementsForm = () => {
                     required
                   >
                     <option value="">Seleccione tipo de proyecto</option>
-                    <option value="Development">Desarollo App Móvil</option>
-                    <option value="Infrastructure">Desarollo Web</option>
-                    <option value="Research">Aplicación de Escritorio</option>
-                    <option value="Maintenance">Consultoría</option>
-                    <option value="Other">Otro</option>
+                    <option value="Desarollo App Móvil">Desarollo App Móvil</option>
+                    <option value="Desarollo Web">Desarollo Web</option>
+                    <option value="Aplicación de Escritorio">Aplicación de Escritorio</option>
+                    <option value="Consultoría">Consultoría</option>
+                    <option value="Otro">Otro</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -325,10 +325,10 @@ const RequirementsForm = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="Low">Bajo</option>
-                    <option value="Medium">Medio</option>
-                    <option value="High">Alto</option>
-                    <option value="Critical">Crítico</option>
+                    <option value="Bajo">Bajo</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Crítico">Crítico</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -342,9 +342,9 @@ const RequirementsForm = () => {
                     required
                   >
                     <option value="">Seleccione Status del Proyecto</option>
-                    <option value="Pending">Rechazado</option>
-                    <option value="Approved">Aprobado</option>
-                    <option value="In Progress">En Progreso</option>
+                    <option value="Rechazado">Rechazado</option>
+                    <option value="Aprobado">Aprobado</option>
+                    <option value="En Progreso">En Progreso</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -451,7 +451,7 @@ const RequirementsForm = () => {
                 type="submit" 
                 disabled={loading}
               >
-                {loading ? 'Submitting...' : (editMode ? 'Update Requirement' : 'Submit Requirement')}
+                {loading ? 'Subiendo...' : (editMode ? 'Actualizar Solicitud' : 'Subir Solicitud')}
               </Button>
             </div>
           </Form>

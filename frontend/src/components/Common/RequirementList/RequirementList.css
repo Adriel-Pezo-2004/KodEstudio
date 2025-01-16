@@ -1,0 +1,161 @@
+/* Aumentamos la especificidad usando la clase container */
+.container .card.shadow-sm {
+  background-color: #F2AC57 !important;
+  border-radius: 8px 8px 0 0 !important;
+  border: none !important;
+}
+
+.container .card.shadow-sm .card-header {
+  background-color: transparent !important;
+  border-bottom: none !important;
+  padding: 1.5rem 2rem 1rem !important;
+}
+
+.container .card.shadow-sm h2 {
+  color: white !important;
+  font-size: 1.75rem !important;
+  margin: 0 !important;
+}
+
+.container .card .card-body {
+  padding: 2rem !important;
+  background-color: white !important;
+}
+
+/* Table Styles con mayor especificidad */
+.container .table {
+  margin-bottom: 0 !important;
+}
+
+.container .table th {
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+  text-transform: uppercase !important;
+  border-bottom: 2px solid #e0e0e0 !important;
+  padding: 1rem !important;
+  background-color: white !important;
+}
+
+.container .table td {
+  padding: 1rem !important;
+  vertical-align: middle !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+/* Filter Controls con mayor especificidad */
+.container .form-control, 
+.container .form-select {
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
+  padding: 0.75rem !important;
+  background-color: #f8f9fa !important;
+  transition: border-color 0.2s ease !important;
+  height: auto !important;
+}
+
+.container .form-control:focus, 
+.container .form-select:focus {
+  border-color: #F2AC57 !important;
+  box-shadow: 0 0 0 0.2rem rgba(242, 172, 87, 0.25) !important;
+  background-color: white !important;
+}
+
+/* Button Styles con mayor especificidad */
+.container .btn {
+  padding: 0.75rem 2rem !important;
+  border-radius: 25px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.container .btn-primary {
+  background-color: #F2AC57 !important;
+  border-color: #F2AC57 !important;
+  color: white !important;
+}
+
+.container .btn-primary:hover {
+  background-color: #e09c47 !important;
+  border-color: #e09c47 !important;
+}
+
+.container .btn-outline-primary {
+  color: #F2AC57 !important;
+  border-color: #F2AC57 !important;
+  background-color: transparent !important;
+}
+
+.container .btn-outline-primary:hover {
+  background-color: #F2AC57 !important;
+  border-color: #F2AC57 !important;
+  color: white !important;
+}
+
+.container .btn-outline-danger {
+  padding: 0.75rem 1.5rem !important;
+}
+
+/* Badge Styles con mayor especificidad */
+.container .badge {
+  padding: 0.5rem 1rem !important;
+  border-radius: 15px !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Pagination con mayor especificidad */
+.container .pagination-container {
+  margin-top: 2rem !important;
+}
+
+.container .pagination-container .btn {
+  padding: 0.5rem 1rem !important;
+}
+
+/* Alert Styles con mayor especificidad */
+.container .alert {
+  border-radius: 4px !important;
+  padding: 1rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Loading Spinner con mayor especificidad */
+.container .spinner-border {
+  color: #F2AC57 !important;
+}
+
+/* Table hover effect */
+.container .table-hover tbody tr:hover,
+.container .table tbody tr:hover {
+  background-color: rgba(242, 172, 87, 0.1) !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container .card-body {
+    padding: 1rem !important;
+  }
+  
+  .container .row {
+    margin-bottom: 1rem !important;
+  }
+  
+  .container .col-md-3 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .container .btn {
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .container .table-responsive {
+    margin-bottom: 1rem !important;
+  }
+  
+  .container .d-flex.justify-content-between {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+}

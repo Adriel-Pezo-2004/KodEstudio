@@ -166,8 +166,8 @@ def update_requirement(requirement_id):
         data = request.json
         success = db_manager.update_project_requirement(requirement_id, data)
         if success:
-            return jsonify({'message': 'Requirement updated successfully'}), 200
-        return jsonify({'error': 'Requirement not found'}), 404
+            return jsonify({'message': 'Solicitud actualizada'}), 200
+        return jsonify({'error': 'Solicitud no encontrada'}), 404
     except ValueError as e:
         logger.warning(f"Validation error: {e}")
         return jsonify({'error': str(e)}), 400

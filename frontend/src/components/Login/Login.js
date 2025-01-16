@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -78,7 +80,7 @@ const Login = () => {
         <div className="welcome-section">
           <h2>Saludos, Usuario</h2>
           <p>¿No tienes una cuenta?</p>
-          <button className="sign-up-button">Regístrate</button>
+          <button className="sign-up-button" onClick={() => navigate('/registro')}>Regístrate</button>
         </div>
       </div>
     </div>

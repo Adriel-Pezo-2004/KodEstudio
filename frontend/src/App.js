@@ -39,7 +39,14 @@ function App() {
                   RequirementList} />
               </div>
             } />
-            <Route path="/edit-requirement/:id" element={<RequirementsForm />} />
+            <Route path="/edit-requirement/:id" element={
+              <div className="container py-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  
+                </div>
+                <RequirementsForm />
+              </div>
+            } />
             <Route path="/login" element={
               <div className="container py-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">

@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+  
+[[redirects]]
+  from = "/api/*"
+  to = "https://tu-api.herokuapp.com/api/:splat"
+  status = 200

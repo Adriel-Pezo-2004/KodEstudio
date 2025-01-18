@@ -23,6 +23,16 @@ class DatabaseManager:
                 logger.error(f"Error connecting to MongoDB: {str(e)}")
                 raise
 
+    def insert_user(self, user_data):
+        """Insert a new user into the database"""
+        try:
+            result = self.users_collection.insert_one(user_data)
+            logger.info(f"Successfully inserted user with ID: {result.inserted_id}")
+            return str(result.inserted_id)
+        except Exception as e:
+            logger.error(f"Error inserting user: {str(e)}")
+            raise
+
     @staticmethod
     def serialize_object_id(item):
         """Convert ObjectId to string in a document"""

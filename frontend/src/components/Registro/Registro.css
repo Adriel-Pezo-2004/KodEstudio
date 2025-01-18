@@ -1,0 +1,116 @@
+.registro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.registro-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 400px;
+  max-width: 100%;
+}
+
+.registro-card-header {
+  background-color: #F2AC57;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-bottom: none;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.registro-card-body {
+  padding: 40px;
+}
+
+/* Form Styles */
+.registro-form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.registro-form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.registro-form-control {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  transition: border-color 0.2s ease;
+}
+
+.registro-form-control:focus {
+  border-color: #F2AC57;
+  box-shadow: 0 0 0 0.2rem rgba(242, 172, 87, 0.25);
+  background-color: white;
+}
+
+/* Button Styles */
+.registro-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: 100%;
+  color: white;
+  border: none; 
+}
+
+.registro-btn-primary {
+  background-color: #F2AC57;
+  border: none;
+}
+
+.registro-btn-primary:hover {
+  background-color: #e09c47;
+  border: none; 
+}
+
+.registro-btn-primary:disabled {
+  background-color: #F2AC57;
+  border: none; 
+  opacity: 0.65;
+}
+
+/* Alert Styles */
+.registro-alert {
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.registro-alert-danger {
+  background-color: #fff2f2;
+  border-color: #ffcccc;
+  color: #dc3545;
+}
+
+.registro-alert-success {
+  background-color: #f2fff2;
+  border-color: #ccffcc;
+  color: #198754;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .registro-card-body {
+    padding: 1rem;
+  }
+
+  .registro-btn {
+    width: 100%;
+  }
+}

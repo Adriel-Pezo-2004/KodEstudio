@@ -7,6 +7,7 @@ import RequirementsForm from './components/Common/RequirementsForm/RequirementsF
 import RequirementList from './components/Common/RequirementList/RequirementList';
 import Login from './components/Login/Login';
 import Logout from './components/Logout/Logout';
+import Registro from './components/Registro/Registro';
 import './App.css';
 
 const PrivateRoute = ({ element: Component, ...rest }) => {
@@ -56,6 +57,14 @@ function App() {
               </div>
             } />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/registro" element={
+              <div>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  
+                </div>
+                <Registro />
+              </div>
+            } />
           </Routes>
         </main>
         <Footer />

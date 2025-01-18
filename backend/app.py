@@ -53,6 +53,33 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorated
 
+@app.route('/api/register', methods=['POST'])
+def register():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'message': 'Missing required fields'}), 400
+
+        # Check if user already exists
+        existing_user = db_manager.get_user_by_username(username)
+        if existing_user:
+            return jsonify({'message': 'Username already exists'}), 400
+
+        # Create new user
+        user_data = {
+            'username': username,
+            'password': password,
+            'created_at': datetime.utcnow(),
+            'updated_at': datetime.utcnow()
+        }
+        user_id = db_manager.insert_user(user_data)
+        return jsonify({'message': 'User registered successfully', 'user_id': user_id}), 201
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
 @app.route('/api/login', methods=['POST'])
 def login():
     try:

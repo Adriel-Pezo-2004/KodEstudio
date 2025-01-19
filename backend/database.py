@@ -17,6 +17,7 @@ class DatabaseManager:
                 self.db = self.client['KodEstudio']
                 self.collection = self.db['Solicitudes']
                 self.users_collection = self.db['Usuarios']
+                self.reviews_collection = self.db['Calificaciones']
                 DatabaseManager._instance = self
                 logger.info("Successfully connected to MongoDB")
             except Exception as e:
@@ -32,6 +33,18 @@ class DatabaseManager:
         except Exception as e:
             logger.error(f"Error inserting user: {str(e)}")
             raise
+
+    def get_all_reviews(self):
+        """Retrieve all reviews from the database"""
+        try:
+            reviews = list(self.reviews_collection.find())
+            for review in reviews:
+                review['_id'] = str(review['_id'])  # Convert ObjectId to string
+            return reviews
+        except Exception as e:
+            logger.error(f"Error retrieving reviews: {str(e)}")
+            raise
+
 
     @staticmethod
     def serialize_object_id(item):

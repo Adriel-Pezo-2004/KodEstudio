@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../../components/Common/Card/Card';
 import Logo from '../../components/Common/Logo/Logo';
 import { motion } from 'framer-motion';
+import Carrusel from '../../components/Common/Carrusel/Carrusel';
 import './Home.css';
 
 const Home = () => {
@@ -105,7 +106,7 @@ const Home = () => {
           </div>
         </div>
         <div className="container">
-          <h1 className="text-center mb-5 lenguajes-title">Lenguajes</h1>
+          <h1 className="text-center mb-5 lenguajes-title">Lenguajes que Empleamos</h1>
           <div className="row g-4">
             {lenguajes.map((lenguaje, index) => (
               <div key={index} className="col-md-3">
@@ -113,6 +114,12 @@ const Home = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+      <section className="reviews-section py-5">
+        <div className="container">
+          <h1 className="text-center mb-5 lenguajes-title">¿Qué opinan nuestros clientes?</h1>
+          <Carrusel />
         </div>
       </section>
     </>

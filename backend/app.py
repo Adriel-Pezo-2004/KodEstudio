@@ -129,6 +129,16 @@ def logout():
     # En un sistema basado en JWT, el logout se maneja en el frontend
     return jsonify({'message': 'Logged out successfully'}), 200
 
+@app.route('/api/reviews', methods=['GET'])
+def get_reviews():
+    try:
+        reviews = db_manager.get_all_reviews()
+        return jsonify(reviews), 200
+    except Exception as e:
+        logger.error(f"Error retrieving reviews: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+
 @app.route('/api/submit-requirements', methods=['POST'])
 def submit_requirements():
     try:

@@ -94,7 +94,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="services-section py-5">
+      <section className="services-section">
         <div className="container">
           <h1 className="text-center mb-5 lenguajes-title">Nuestros Servicios</h1>
           <div className="row g-4">
@@ -105,6 +105,8 @@ const Home = () => {
             ))}
           </div>
         </div>
+      </section>
+      <section className="services-section">
         <div className="container">
           <h1 className="text-center mb-5 lenguajes-title">Lenguajes que Empleamos</h1>
           <div className="row g-4">

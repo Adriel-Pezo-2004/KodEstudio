@@ -18,6 +18,7 @@ class DatabaseManager:
                 self.collection = self.db['Solicitudes']
                 self.users_collection = self.db['Usuarios']
                 self.reviews_collection = self.db['Calificaciones']
+                self.clientes_collection = self.db['Clientes']
                 DatabaseManager._instance = self
                 logger.info("Successfully connected to MongoDB")
             except Exception as e:
@@ -45,6 +46,103 @@ class DatabaseManager:
             logger.error(f"Error retrieving reviews: {str(e)}")
             raise
 
+    def get_all_clientes(self, filters=None, page=1, per_page=10):
+        """Retrieve all clients with optional filtering and pagination"""
+        try:
+            query = filters if filters else {}
+            
+            # Get total count for pagination
+            total_documents = self.clientes_collection.count_documents(query)
+            
+            # Calculate skip value for pagination
+            skip = (page - 1) * per_page
+            
+            # Execute query with pagination
+            cursor = self.clientes_collection.find(query).skip(skip).limit(per_page)
+            clientes = [self.serialize_object_id(cliente) for cliente in cursor]
+            
+            return {
+                'clientes': clientes,
+                'total': total_documents,
+                'page': page,
+                'per_page': per_page,
+                'total_pages': -(-total_documents // per_page)  # Ceiling division
+            }
+        except Exception as e:
+            logger.error(f"Error retrieving clients: {str(e)}")
+            raise
+
+    def delete_cliente(self, cliente_id):
+        """Delete a client"""
+        try:
+            result = self.clientes_collection.delete_one({"_id": ObjectId(cliente_id)})
+            if result.deleted_count > 0:
+                logger.info(f"Successfully deleted client: {cliente_id}")
+                return True
+            logger.warning(f"No client found with ID: {cliente_id}")
+            return False
+        except Exception as e:
+            logger.error(f"Error deleting client: {str(e)}")
+            raise
+
+    def search_clientes(self, search_term):
+        """Search clients by various fields"""
+        try:
+            query = {
+                "$or": [
+                    {"nombre": {"$regex": search_term, "$options": "i"}},
+                    {"email": {"$regex": search_term, "$options": "i"}},
+                    {"ciudad": {"$regex": search_term, "$options": "i"}}
+                ]
+            }
+            
+            cursor = self.clientes_collection.find(query)
+            clientes = [self.serialize_object_id(cliente) for cliente in cursor]
+            return clientes
+        except Exception as e:
+            logger.error(f"Error searching clients: {str(e)}")
+            raise
+    
+    def insert_cliente(self, cliente_data):
+        """Insert a new client into the database"""
+        try:
+            result = self.clientes_collection.insert_one(cliente_data)
+            logger.info(f"Successfully inserted client with ID: {result.inserted_id}")
+            return str(result.inserted_id)
+        except Exception as e:
+            logger.error(f"Error inserting client: {str(e)}")
+            raise
+
+    def update_cliente(self, cliente_id, update_data):
+        """Update an existing client"""
+        try:
+            # Remove _id from update_data if it exists
+            if '_id' in update_data:
+                del update_data['_id']
+            result = self.clientes_collection.update_one(
+                {"_id": ObjectId(cliente_id)},
+                {"$set": update_data}
+            )
+            if result.matched_count > 0:
+                logger.info(f"Successfully updated client: {cliente_id}")
+                return True
+            logger.warning(f"No client found with ID: {cliente_id}")
+            return False
+        except Exception as e:
+            logger.error(f"Error updating client: {str(e)}")
+            raise
+
+
+    def get_cliente(self, cliente_id):
+        """Retrieve a specific client by ID"""
+        try:
+            cliente = self.clientes_collection.find_one({"_id": ObjectId(cliente_id)})
+            if cliente:
+                return self.serialize_object_id(cliente)
+            return None
+        except Exception as e:
+            logger.error(f"Error retrieving client: {str(e)}")
+            raise
 
     @staticmethod
     def serialize_object_id(item):

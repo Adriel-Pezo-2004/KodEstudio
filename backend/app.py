@@ -42,7 +42,7 @@ def token_required(f):
         try:
             token = token.split(" ")[1]  # Remove 'Bearer' prefix
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            current_user = db_manager.get_user_by_id(data['user_id'])
+            db_manager.get_user_by_id(data['user_id'])  # Verify user exists
         except jwt.ExpiredSignatureError:
             return jsonify({'error': 'Token has expired!'}), 403
         except jwt.InvalidTokenError:
@@ -50,7 +50,7 @@ def token_required(f):
         except Exception as e:
             logger.error(f"Token error: {str(e)}")
             return jsonify({'error': 'Token is invalid!'}), 403
-        return f(current_user, *args, **kwargs)
+        return f(*args, **kwargs)
     return decorated
 
 @app.route('/api/register', methods=['POST'])
@@ -129,6 +129,101 @@ def logout():
     # En un sistema basado en JWT, el logout se maneja en el frontend
     return jsonify({'message': 'Logged out successfully'}), 200
 
+@app.route('/api/clientes', methods=['POST'])
+@token_required
+def create_cliente():
+    try:
+        data = request.json
+        cliente_id = db_manager.insert_cliente(data)
+        return jsonify({
+            'message': 'Cliente creado exitosamente',
+            'cliente_id': cliente_id
+        }), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error creando cliente: {str(e)}")
+        return jsonify({'error': 'Error interno del servidor'}), 500
+
+@app.route('/api/clientes/<cliente_id>', methods=['PUT'])
+@token_required
+def update_cliente(cliente_id):
+    try:
+        data = request.json
+        success = db_manager.update_cliente(cliente_id, data)
+        if success:
+            return jsonify({'message': 'Cliente actualizado exitosamente'}), 200
+        return jsonify({'error': 'Cliente no encontrado'}), 404
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error actualizando cliente: {str(e)}")
+        return jsonify({'error': 'Error interno del servidor'}), 500
+
+@app.route('/api/clientes/<cliente_id>', methods=['GET'])
+@token_required
+def get_cliente(cliente_id):
+    try:
+        cliente = db_manager.get_cliente(cliente_id)
+        if cliente:
+            return jsonify(cliente), 200
+        return jsonify({'error': 'Cliente no encontrado'}), 404
+    except Exception as e:
+        logger.error(f"Error obteniendo cliente: {str(e)}")
+        return jsonify({'error': 'Error interno del servidor'}), 500
+
+@app.route('/api/clientes', methods=['GET'])
+@token_required
+def get_clientes():
+    try:
+        # Parse query parameters with defaults
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        
+        # Build filters dictionary
+        filters = {}
+        for field in ['ciudad']:
+            if request.args.get(field):
+                filters[field] = request.args.get(field)
+        
+        result = db_manager.get_all_clientes(
+            filters=filters,
+            page=page,
+            per_page=per_page
+        )
+        return jsonify(result), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Error retrieving clients: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/clientes/<cliente_id>', methods=['DELETE'])
+@token_required
+def delete_cliente(cliente_id):
+    try:
+        success = db_manager.delete_cliente(cliente_id)
+        if success:
+            return jsonify({'message': 'Client deleted successfully'}), 200
+        return jsonify({'error': 'Client not found'}), 404
+    except Exception as e:
+        logger.error(f"Error deleting client: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/clientes/search', methods=['GET'])
+@token_required
+def search_clientes():
+    try:
+        search_term = request.args.get('q', '')
+        if not search_term:
+            return jsonify({'error': 'Search term is required'}), 400
+        
+        results = db_manager.search_clientes(search_term)
+        return jsonify({'results': results}), 200
+    except Exception as e:
+        logger.error(f"Error searching clients: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
 @app.route('/api/reviews', methods=['GET'])
 def get_reviews():
     try:
@@ -148,8 +243,6 @@ def submit_requirements():
             'message': 'Requirement created successfully',
             'requirement_id': requirement_id
         }), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
     except Exception as e:
         logger.error(f"Error creating requirement: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500

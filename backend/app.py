@@ -249,7 +249,7 @@ def submit_requirements():
 
 @app.route('/api/requirements', methods=['GET'])
 @token_required
-def get_requirements(current_user):
+def get_requirements():
     try:
         # Parse query parameters with defaults
         page = int(request.args.get('page', 1))

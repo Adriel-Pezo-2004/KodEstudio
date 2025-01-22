@@ -11,6 +11,7 @@ import Logout from './components/Logout/Logout';
 import Registro from './components/Registro/Registro';
 import ClientesList from './components/Common/ClientesList/ClientesList';
 import ClientesForm from './components/Common/ClientesForm/ClientesForm';
+import PageTitle from './components/PageTitle/PageTitle';
 
 function App() {
   return (
@@ -19,71 +20,72 @@ function App() {
         <Header />
         <main className="flex-grow-1">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={
+              <>
+                <PageTitle title="Inicio - Kod Estudio" />
+                <Home />
+              </>
+            } />
             <Route path="/requirements" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Nueva Solicitud - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <RequirementsForm />
               </div>
             } />
             <Route path="/requirements-list" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
-                  <RequirementList />
+                <PageTitle title="Lista de Solicitudes - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
+                <RequirementList />
               </div>
             } />
             <Route path="/edit-requirement/:id" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Editar Solicitud - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <RequirementsForm />
               </div>
             } />
             <Route path="/clientes" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Nuevo Cliente - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesForm />
               </div>
             } />
             <Route path="/clientes-list" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Lista de Clientes - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesList />
               </div>
             } />
             <Route path="/edit-cliente/:id" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Editar Cliente - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesForm />
               </div>
             } />
             <Route path="/login" element={
               <div className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+                <PageTitle title="Iniciar Sesión - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <Login />
               </div>
             } />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/logout" element={
+              <>
+                <PageTitle title="Cerrar Sesión - Kod Estudio" />
+                <Logout />
+              </>
+            } />
             <Route path="/registro" element={
-              <div>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  
-                </div>
+              <>
+                <PageTitle title="Registro - Kod Estudio" />
                 <Registro />
-              </div>
+              </>
             } />
           </Routes>
         </main>

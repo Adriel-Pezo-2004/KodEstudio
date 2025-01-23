@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Container, Table, Button, Form, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
+import { Container, Button, Form, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useDebounce from '../../../hooks/useDebounce';
+import ClientesTable from '../ClientesTable/ClientesTable';
 import './ClientesList.css';
 
 const ClientesList = () => {
@@ -9,76 +11,54 @@ const ClientesList = () => {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const fetchClientes = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      let url = `http://localhost:5000/api/clientes?page=${currentPage}`;
+      let url = `http://localhost:5000/api/clientes`;
       
-      // Add filters to URL
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) url += `&${key}=${value}`;
-      });
-
-      if (searchTerm) {
-        url = `http://localhost:5000/api/clientes/search?q=${searchTerm}`;
+      if (debouncedSearchTerm) {
+        url += `/search?q=${debouncedSearchTerm}`;
+      } else if (filters.ciudad) {
+        url += `?ciudad=${filters.ciudad}`;
       }
 
       const response = await axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }        
+        headers: { Authorization: `Bearer ${token}` },
       });
-      
-      if (searchTerm) {
-        setClientes(response.data.results);
-        setTotalPages(1);
-      } else {
-        setClientes(response.data.clientes);
-        setTotalPages(response.data.total_pages);
-      }
+      setClientes(response.data.clientes || response.data.results);
     } catch (err) {
       setError('Error loading clients: ' + err.message);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, filters, searchTerm]);
+  }, [filters, debouncedSearchTerm]);
 
   useEffect(() => {
     fetchClientes();
-  }, [currentPage, filters, searchTerm, fetchClientes]);
+  }, [fetchClientes]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    setCurrentPage(1);
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1);
   };
 
-  const handleEdit = (id) => {
-    navigate(`/edit-cliente/${id}`);
-  };
+  const handleEdit = (id) => navigate(`/edit-cliente/${id}`);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this client?')) {
       try {
         const token = localStorage.getItem('token');
         await axios.delete(`http://localhost:5000/api/clientes/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         fetchClientes();
       } catch (err) {
@@ -87,24 +67,13 @@ const ClientesList = () => {
     }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
   return (
     <Container className="py-4">
       <Card className="shadow-sm">
         <Card.Header>
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="mb-0">Lista de Clientes</h2>
-            <Button 
-              variant="primary" 
-              onClick={() => navigate('/clientes')}
-            >
+            <Button variant="primary" onClick={() => navigate('/clientes')}>
               Crear Cliente
             </Button>
           </div>
@@ -112,7 +81,6 @@ const ClientesList = () => {
         <Card.Body>
           {error && <Alert variant="danger">{error}</Alert>}
 
-          {/* Filters and Search */}
           <Row className="mb-4">
             <Col md={3}>
               <Form.Group>
@@ -129,7 +97,7 @@ const ClientesList = () => {
                 type="text"
                 name="ciudad"
                 placeholder="Filtrar por Ciudad"
-                value={filters.ciudad}
+                value={filters.ciudad || ''}
                 onChange={handleFilterChange}
               />
             </Col>
@@ -142,72 +110,7 @@ const ClientesList = () => {
               </Spinner>
             </div>
           ) : (
-            <>
-              <div className="table-responsive">
-                <Table hover>
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Celular</th>
-                      <th>Email</th>
-                      <th>Ciudad</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clientes.map((cliente) => (
-                      <tr key={cliente._id}>
-                        <td>{cliente.nombre}</td>
-                        <td>{cliente.celular}</td>
-                        <td>{cliente.email}</td>
-                        <td>{cliente.ciudad}</td>
-                        <td>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                            onClick={() => handleEdit(cliente._id)}
-                          >
-                            Editar
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDelete(cliente._id)}
-                          >
-                            Eliminar
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </div>
-
-              {/* Pagination */}
-              {!searchTerm && totalPages > 1 && (
-                <div className="d-flex justify-content-center mt-4">
-                  <Button
-                    variant="outline-primary"
-                    className="me-2"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => prev - 1)}
-                  >
-                    Previous
-                  </Button>
-                  <span className="mx-3 align-self-center">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <Button
-                    variant="outline-primary"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                  >
-                    Next
-                  </Button>
-                </div>
-              )}
-            </>
+            <ClientesTable clientes={clientes} onEdit={handleEdit} onDelete={handleDelete} />
           )}
         </Card.Body>
       </Card>

@@ -5,6 +5,7 @@ import Logo from '../../components/Common/Logo/Logo';
 import { motion } from 'framer-motion';
 import Carrusel from '../../components/Common/Carrusel/Carrusel';
 import './Home.css';
+import CommandPrompt from '../../components/CommandPrompt/CommandPrompt';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -122,6 +123,18 @@ const Home = () => {
         <div className="container">
           <h1 className="text-center mb-5 lenguajes-title">¿Qué opinan nuestros clientes?</h1>
           <Carrusel />
+        </div>
+      </section>
+      <section className="reviews-section py-1">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-6">
+              <h1 className="mb-5 lenguajes-title">Pregúntale a nuestro asistente</h1>
+            </div>
+            <div className="col-md-6 d-flex justify-content-center">
+              <CommandPrompt />
+            </div>
+          </div>
         </div>
       </section>
     </>

@@ -1,0 +1,41 @@
+h1, h2 {
+  color: #333;
+}
+
+p {
+  color: #666;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.py-5 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #666;
+}
+
+.Image {
+    width: 40rem;
+    height: auto;
+    align-items: center;
+    border-radius: 2rem;
+}
+
+.cont  {
+    height: 60%;
+}

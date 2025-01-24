@@ -36,6 +36,9 @@ const Header = () => {
             <li className="nav-item">
               <Link className="nav-link active" to="/">Inicio</Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link active" to="/sobre-nosotros">Sobre Nosotros</Link>
+            </li>
             {username ? (
               <>
                 <li className="nav-item">

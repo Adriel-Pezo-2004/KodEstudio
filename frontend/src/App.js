@@ -12,6 +12,7 @@ import Registro from './components/Registro/Registro';
 import ClientesList from './components/Common/ClientesList/ClientesList';
 import ClientesForm from './components/Common/ClientesForm/ClientesForm';
 import PageTitle from './components/PageTitle/PageTitle';
+import About from './pages/About/About';
 
 function App() {
   return (
@@ -25,6 +26,13 @@ function App() {
                 <PageTitle title="Inicio - Kod Estudio" />
                 <Home />
               </>
+            } />
+            <Route path="/sobre-nosotros" element={
+              <div className="container py-5">
+                <PageTitle title="Sobre Nosotros - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
+                <About />
+              </div>
             } />
             <Route path="/requirements" element={
               <div className="container py-5">

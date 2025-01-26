@@ -76,7 +76,7 @@ const Home = () => {
                 initial="hidden"
                 animate="visible"
                 variants={slideInFromLeft}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.25 }}
               >
                 Transformando ideas en soluciones digitales
               </motion.p>
@@ -86,9 +86,19 @@ const Home = () => {
                 initial="hidden"
                 animate="visible"
                 variants={slideInFromLeft}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
               >
                 Comenzar Proyecto
+              </motion.button>
+              <motion.button 
+                className="btn btn-dark btn-lg m-3"
+                onClick={() => navigate('/simulador')}
+                initial="hidden"
+                animate="visible"
+                variants={slideInFromLeft}
+                transition={{ delay: 0.5 }}
+              >
+                Simula Presupuesto
               </motion.button>
             </div>
           </div>

@@ -13,6 +13,7 @@ import ClientesList from './components/Common/ClientesList/ClientesList';
 import ClientesForm from './components/Common/ClientesForm/ClientesForm';
 import PageTitle from './components/PageTitle/PageTitle';
 import About from './pages/About/About';
+import Simulador from './components/Common/Simulador/Simulador';
 
 function App() {
   return (
@@ -32,6 +33,13 @@ function App() {
                 <PageTitle title="Sobre Nosotros - Kod Estudio" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <About />
+              </div>
+            } />
+            <Route path="/simulador" element={
+              <div className="container py-5">
+                <PageTitle title="Simulador de Proyectos - Kod Estudio" />
+                <div className="d-flex justify-content-between align-items-center mb-4"></div>
+                <Simulador />
               </div>
             } />
             <Route path="/requirements" element={

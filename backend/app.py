@@ -159,7 +159,7 @@ def update_cliente(cliente_id):
     except Exception as e:
         logger.error(f"Error actualizando cliente: {str(e)}")
         return jsonify({'error': 'Error interno del servidor'}), 500
-
+    
 @app.route('/api/clientes/<cliente_id>', methods=['GET'])
 @token_required
 def get_cliente(cliente_id):
@@ -246,7 +246,7 @@ def submit_requirements():
     except Exception as e:
         logger.error(f"Error creating requirement: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
-
+    
 @app.route('/api/requirements', methods=['GET'])
 @token_required
 def get_requirements():

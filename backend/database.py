@@ -106,6 +106,8 @@ class DatabaseManager:
     def insert_cliente(self, cliente_data):
         """Insert a new client into the database"""
         try:
+            cliente_data['created_at'] = datetime.utcnow()
+            cliente_data['updated_at'] = datetime.utcnow()
             result = self.clientes_collection.insert_one(cliente_data)
             logger.info(f"Successfully inserted client with ID: {result.inserted_id}")
             return str(result.inserted_id)
@@ -116,15 +118,27 @@ class DatabaseManager:
     def update_cliente(self, cliente_id, update_data):
         """Update an existing client"""
         try:
-            # Remove _id from update_data if it exists
-            if '_id' in update_data:
-                del update_data['_id']
+            update_data['updated_at'] = datetime.utcnow()
+            
             result = self.clientes_collection.update_one(
                 {"_id": ObjectId(cliente_id)},
                 {"$set": update_data}
             )
+            
             if result.matched_count > 0:
                 logger.info(f"Successfully updated client: {cliente_id}")
+                
+                # Update client information in the project requirements collection
+                self.collection.update_many(
+                    {"requestorEmail": update_data.get('email')},
+                    {"$set": {
+                        'requestorName': update_data.get('nombre'),
+                        'requestorPhone': update_data.get('celular'),
+                        'department': update_data.get('ciudad'),
+                        'updated_at': datetime.utcnow()
+                    }}
+                )
+                
                 return True
             logger.warning(f"No client found with ID: {cliente_id}")
             return False
@@ -187,12 +201,25 @@ class DatabaseManager:
     def insert_project_requirement(self, form_data):
         """Insert a new project requirement into the database"""
         try:
-            self.validate_requirement_data(form_data)
             form_data['created_at'] = datetime.utcnow()
             form_data['updated_at'] = datetime.utcnow()
             
+            # Insert into project requirements collection
             result = self.collection.insert_one(form_data)
             logger.info(f"Successfully inserted requirement with ID: {result.inserted_id}")
+            
+            # Insert into clients collection
+            client_data = {
+                'nombre': form_data.get('requestorName'),
+                'email': form_data.get('requestorEmail'),
+                'celular': form_data.get('requestorPhone'),
+                'ciudad': form_data.get('department'),
+                'created_at': datetime.utcnow(),
+                'updated_at': datetime.utcnow()
+            }
+            client_result = self.clientes_collection.insert_one(client_data)
+            logger.info(f"Successfully inserted client with ID: {client_result.inserted_id}")
+            
             return str(result.inserted_id)
         except Exception as e:
             logger.error(f"Error inserting project requirement: {str(e)}")
@@ -246,19 +273,29 @@ class DatabaseManager:
     def update_project_requirement(self, requirement_id, update_data):
         """Update an existing project requirement"""
         try:
-            self.validate_update_data(update_data)
-            # Create a copy of the update data and remove _id if present
-            clean_update_data = update_data.copy()
-            clean_update_data.pop('_id', None)  # Remove _id if it exists
-            clean_update_data['updated_at'] = datetime.utcnow()
+            update_data['updated_at'] = datetime.utcnow()
             
             result = self.collection.update_one(
                 {"_id": ObjectId(requirement_id)},
-                {"$set": clean_update_data}
+                {"$set": update_data}
             )
             
             if result.matched_count > 0:
                 logger.info(f"Successfully updated requirement: {requirement_id}")
+                
+                # Update client information in the clients collection
+                client_data = {
+                    'nombre': update_data.get('requestorName'),
+                    'email': update_data.get('requestorEmail'),
+                    'celular': update_data.get('requestorPhone'),
+                    'ciudad': update_data.get('department'),
+                    'updated_at': datetime.utcnow()
+                }
+                self.clientes_collection.update_one(
+                    {"email": update_data.get('requestorEmail')},
+                    {"$set": client_data}
+                )
+                
                 return True
             logger.warning(f"No requirement found with ID: {requirement_id}")
             return False

@@ -113,7 +113,7 @@ const RequirementsForm = () => {
     if (!validateForm()) {
         return;
     }
-
+  
     try {
         setLoading(true);
         setError('');
@@ -140,7 +140,6 @@ const RequirementsForm = () => {
                 setFormData(initialFormState);
             }
             
-            // Redirigir después de un breve delay para mostrar el mensaje de éxito
             setTimeout(() => {
                 navigate('/requirements-list');
             }, 2000);

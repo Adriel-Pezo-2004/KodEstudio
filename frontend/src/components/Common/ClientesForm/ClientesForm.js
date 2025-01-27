@@ -79,22 +79,22 @@ const ClientesForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     try {
       setLoading(true);
       setError('');
-
+  
       const token = localStorage.getItem('token');
       const url = editMode 
         ? `http://localhost:5000/api/clientes/${id}`
         : 'http://localhost:5000/api/clientes';
         
       const method = editMode ? 'put' : 'post';
-
+  
       const response = await axios({
         method,
         url,
@@ -104,14 +104,14 @@ const ClientesForm = () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-
+  
       if (response.status === 201 || response.status === 200) {
         setSuccess(editMode ? 'Cliente actualizado' : 'Cliente creado');
-
+  
         if (!editMode) {
           setFormData(initialFormState);
         }
-
+  
         setTimeout(() => {
           navigate('/clientes-list');
         }, 2000);

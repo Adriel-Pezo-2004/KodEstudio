@@ -118,6 +118,9 @@ class DatabaseManager:
     def update_cliente(self, cliente_id, update_data):
         """Update an existing client"""
         try:
+            # Remove _id from update_data if it exists
+            if '_id' in update_data:
+                del update_data['_id']
             update_data['updated_at'] = datetime.utcnow()
             
             result = self.clientes_collection.update_one(
@@ -273,6 +276,9 @@ class DatabaseManager:
     def update_project_requirement(self, requirement_id, update_data):
         """Update an existing project requirement"""
         try:
+            # Remove _id from update_data if it exists
+            if '_id' in update_data:
+                del update_data['_id']
             update_data['updated_at'] = datetime.utcnow()
             
             result = self.collection.update_one(

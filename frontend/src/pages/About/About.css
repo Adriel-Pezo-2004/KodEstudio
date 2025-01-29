@@ -30,12 +30,68 @@ p {
 }
 
 .Image {
-    width: 40rem;
+    width: 100%;
     height: auto;
-    align-items: center;
     border-radius: 2rem;
 }
 
 .cont  {
     height: 60%;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.historia-section {
+  background-color: #f9f9f9;
+  padding: 40px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.lenguajes-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.historia-text {
+  font-size: 1.35rem; /* Texto más grande */
+  line-height: 1.8;
+  text-align: center; /* Texto centrado */
+  padding: 0 20px;
+  font-weight: lighter;
+}
+
+.rainbow-text {
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 200% 200%;
+  font-weight: 900;
+  font-size: 5rem;
+  -webkit-background-clip: text;
+  background-clip: 0;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-animation 3s linear infinite;
+}
+
+@keyframes rainbow-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .historia-text {
+    text-align: center;
+    padding: 20px 0;
+  }
 }

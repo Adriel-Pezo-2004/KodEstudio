@@ -7,23 +7,25 @@ const About = () => {
     <Container className="py-5 p-3 cont">
       <Row className="mb-5">
         <Col>
-            <h1 className="text-center mb-3 lenguajes-title">Nuestra Historia</h1>
-          <p className="text-center">Establecida el a;o 2025, Kod Estudio es un proyecto de un estudiante de Ingenería de Sistemas, que busca brindar una experiencia de calidad, desde el inicio y posterior al desarrollo.</p>
+          <p className="text-center rainbow-text">Nuestra Historia</p>
+              <p className="historia-text">
+                Establecida el año 2025, Kod Estudio es un proyecto de un estudiante de Ingeniería de Sistemas, que busca brindar una experiencia de calidad, desde el inicio y posterior al desarrollo.
+              </p>
         </Col>
       </Row>
       <Row className="mb-5">
         <Col md={6}>
-          <Image src="https://obieg.pl/uploads/news/314/16693747796585c0e5e23ffec200c863.jpg" fluid className='Image' />
+          <Image src="https://as1.ftcdn.net/v2/jpg/02/78/44/52/1000_F_278445285_gpaJorrC8YLFRtx35rdTCux1OEhJfRUB.jpg" fluid className='Image' />
         </Col>
         <Col md={6}>
           <h1 className="text-center mb-3 lenguajes-title">Misión</h1>
-          <p>Desarrollar soluciones tecnológicas innovadoras y de alta calidad que impulsen la transformación digital de nuestros clientes, proporcionando servicios de software personalizados que optimicen sus procesos y generen valor agregado para sus negocios.</p>
+          <p className="historia-text">Desarrollar soluciones tecnológicas innovadoras y de alta calidad que impulsen la transformación digital de nuestros clientes, proporcionando servicios de software personalizados que optimicen sus procesos y generen valor agregado para sus negocios.</p>
         </Col>
       </Row>
       <Row className="mb-5">
         <Col md={6}>
           <h1 className="text-center mb-3 lenguajes-title">Visión</h1>
-          <p>Ser el socio tecnológico líder en desarrollo de software, reconocido por nuestra excelencia, creatividad y compromiso con la innovación, contribuyendo al crecimiento y éxito digital de las empresas en la región.</p>
+          <p className="historia-text">Ser el socio tecnológico líder en desarrollo de software, reconocido por nuestra excelencia, creatividad y compromiso con la innovación, contribuyendo al crecimiento y éxito digital de las empresas en la región.</p>
         </Col>
         <Col md={6}>
             <Image src="https://images.prismic.io/lunii/5dcaeb71-a949-46e6-af26-508fd7eb0855_Push+Content+Image+1+-+Desktop.png" fluid className='Image' />

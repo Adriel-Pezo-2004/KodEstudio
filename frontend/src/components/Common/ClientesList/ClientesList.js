@@ -11,44 +11,57 @@ const ClientesList = () => {
   const [clientes, setClientes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filters, setFilters] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const [cityFilter, setCityFilter] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 500);
+  const debouncedCity = useDebounce(cityFilter, 500);
 
   const fetchClientes = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      let url = `http://localhost:5000/api/clientes`;
-      
-      if (debouncedSearchTerm) {
-        url += `/search?q=${debouncedSearchTerm}`;
-      } else if (filters.ciudad) {
-        url += `?ciudad=${filters.ciudad}`;
+      const params = new URLSearchParams();
+
+      // Solo agregamos los parámetros si tienen valor
+      if (debouncedSearch.trim()) {
+        params.append('nombre', debouncedSearch.trim());
       }
 
+      if (debouncedCity.trim()) {
+        params.append('ciudad', debouncedCity.trim());
+      }
+
+      const url = `http://localhost:5000/api/clientes${params.toString() ? `?${params.toString()}` : ''}`;
+      console.log('Fetching URL:', url); // Para debugging
+
       const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
-      setClientes(response.data.clientes || response.data.results);
+
+      console.log('Response:', response.data); // Para debugging
+      setClientes(response.data.clientes || []);
+      
     } catch (err) {
-      setError('Error loading clients: ' + err.message);
+      console.error('Error fetching clientes:', err);
+      setError('Error loading clients: ' + (err.response?.data?.error || err.message));
     } finally {
       setLoading(false);
     }
-  }, [filters, debouncedSearchTerm]);
+  }, [debouncedSearch, debouncedCity]);
 
   useEffect(() => {
     fetchClientes();
   }, [fetchClientes]);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleCityFilterChange = (e) => {
+    setCityFilter(e.target.value);
   };
 
   const handleEdit = (id) => navigate(`/edit-cliente/${id}`);
@@ -84,22 +97,25 @@ const ClientesList = () => {
           <Row className="mb-4">
             <Col md={3}>
               <Form.Group>
+                <Form.Label>Buscar por nombre</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Buscar..."
+                  placeholder="Buscar por nombre..."
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
               </Form.Group>
             </Col>
             <Col md={3}>
-              <Form.Control
-                type="text"
-                name="ciudad"
-                placeholder="Filtrar por Ciudad"
-                value={filters.ciudad || ''}
-                onChange={handleFilterChange}
-              />
+              <Form.Group>
+                <Form.Label>Filtrar por ciudad</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Filtrar por ciudad..."
+                  value={cityFilter}
+                  onChange={handleCityFilterChange}
+                />
+              </Form.Group>
             </Col>
           </Row>
 

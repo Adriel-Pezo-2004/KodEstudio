@@ -51,8 +51,12 @@ class DatabaseManager:
         try:
             query = filters if filters else {}
             
+            # Log the query for debugging
+            logger.info(f"MongoDB query: {query}")
+            
             # Get total count for pagination
             total_documents = self.clientes_collection.count_documents(query)
+            logger.info(f"Found {total_documents} documents matching query")
             
             # Calculate skip value for pagination
             skip = (page - 1) * per_page

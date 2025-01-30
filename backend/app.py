@@ -160,43 +160,47 @@ def update_cliente(cliente_id):
         logger.error(f"Error actualizando cliente: {str(e)}")
         return jsonify({'error': 'Error interno del servidor'}), 500
     
-@app.route('/api/clientes/<cliente_id>', methods=['GET'])
-@token_required
-def get_cliente(cliente_id):
-    try:
-        cliente = db_manager.get_cliente(cliente_id)
-        if cliente:
-            return jsonify(cliente), 200
-        return jsonify({'error': 'Cliente no encontrado'}), 404
-    except Exception as e:
-        logger.error(f"Error obteniendo cliente: {str(e)}")
-        return jsonify({'error': 'Error interno del servidor'}), 500
-
+# En app.py - Actualizar la ruta get_clientes
 @app.route('/api/clientes', methods=['GET'])
 @token_required
 def get_clientes():
     try:
-        # Parse query parameters with defaults
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 10))
         
-        # Build filters dictionary
         filters = {}
-        for field in ['ciudad']:
-            if request.args.get(field):
-                filters[field] = request.args.get(field)
+        
+        # Procesar filtros individuales
+        if request.args.get('nombre'):
+            filters['nombre'] = {
+                "$regex": f".*{request.args.get('nombre')}.*",
+                "$options": "i"
+            }
+        
+        if request.args.get('ciudad'):
+            filters['ciudad'] = {
+                "$regex": f".*{request.args.get('ciudad')}.*",
+                "$options": "i"
+            }
+            
+        # Log para debugging
+        print("Filters applied:", filters)
         
         result = db_manager.get_all_clientes(
             filters=filters,
             page=page,
             per_page=per_page
         )
+        
+        # Log para debugging
+        print("Results:", result)
+        
         return jsonify(result), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
+        
     except Exception as e:
+        print("Error in get_clientes:", str(e))  # Log para debugging
         logger.error(f"Error retrieving clients: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
 @app.route('/api/clientes/<cliente_id>', methods=['DELETE'])
 @token_required

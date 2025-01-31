@@ -159,8 +159,41 @@ def update_cliente(cliente_id):
     except Exception as e:
         logger.error(f"Error actualizando cliente: {str(e)}")
         return jsonify({'error': 'Error interno del servidor'}), 500
-    
-# En app.py - Actualizar la ruta get_clientes
+
+@app.route('/api/user', methods=['GET'])
+@token_required
+def get_current_user():
+    try:
+        token = request.headers.get('Authorization').split(" ")[1]
+        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        user = db_manager.get_user_by_id(data['user_id'])
+        if user:
+            return jsonify(user), 200
+        return jsonify({'error': 'User not found'}), 404
+    except Exception as e:
+        logger.error(f"Error retrieving user: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+@app.route('/api/user', methods=['PUT'])
+@token_required
+def update_current_user():
+    try:
+        token = request.headers.get('Authorization').split(" ")[1]
+        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        user_id = data['user_id']
+        update_data = request.json
+        
+        # Formatear la fecha de actualización
+        update_data['updated_at'] = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
+        success = db_manager.update_user(user_id, update_data)
+        if success:
+            return jsonify({'message': 'User updated successfully'}), 200
+        return jsonify({'error': 'User not found'}), 404
+    except Exception as e:
+        logger.error(f"Error updating user: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
 @app.route('/api/clientes', methods=['GET'])
 @token_required
 def get_clientes():

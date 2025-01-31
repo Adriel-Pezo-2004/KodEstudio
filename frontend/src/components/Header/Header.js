@@ -48,7 +48,7 @@ const Header = () => {
                   <Link className="nav-link" to="/clientes-list">Clientes</Link>
                 </li>
                 <li className="nav-item">
-                  <span className="nav-link">Hola, {username}</span>
+                  <Link className="nav-link" to="/perfil">Hola, {username}</Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link text-danger" to="/logout" onClick={handleLogoutClick}>Logout</Link>

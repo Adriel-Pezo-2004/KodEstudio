@@ -35,6 +35,27 @@ class DatabaseManager:
             logger.error(f"Error inserting user: {str(e)}")
             raise
 
+    def update_user(self, user_id, update_data):
+        """Update an existing user"""
+        try:
+            if '_id' in update_data:
+                del update_data['_id']
+            
+            # La fecha de actualización ya está formateada en el controlador
+            result = self.users_collection.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$set": update_data}
+            )
+            
+            if result.matched_count > 0:
+                logger.info(f"Successfully updated user: {user_id}")
+                return True
+            logger.warning(f"No user found with ID: {user_id}")
+            return False
+        except Exception as e:
+            logger.error(f"Error updating user: {str(e)}")
+            raise
+
     def get_all_reviews(self):
         """Retrieve all reviews from the database"""
         try:

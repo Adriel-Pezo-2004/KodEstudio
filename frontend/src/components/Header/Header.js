@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const username = localStorage.getItem('username');
+  const [username, setUsername] = useState(localStorage.getItem('username'));
   console.log('Username retrieved:', username);  // Para debug
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUsername(localStorage.getItem('username'));
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleLogoutClick = (e) => {
     if (!window.confirm('¿Estás seguro de que deseas cerrar sesión?')) {

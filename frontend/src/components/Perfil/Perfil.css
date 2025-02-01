@@ -1,42 +1,99 @@
-/* Perfil.css */
-.perfil-card {
-    background-color: #B5E7F7;
-    width: 200px;
-    padding: 20px;
-    border-radius: 8px;
+/* Estilos generales */
+.profile-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: calc(60vh - 80px);
+    padding-top: 4rem;
+}
+
+/* Contenedor principal del perfil */
+.profile-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 30px 30px 0 0;
-    margin-bottom: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.user-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: #6c757d;
 }
 
 .user-title {
-    color: black;
-    font-size: 18px;
-    margin: 10px 0;
-    font-weight: normal;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
 }
 
-.edit-button {
-    background-color: #CCFF00;
-    border: none;
-    padding: 5px 20px;
-    border-radius: 4px;
+/* Resto de los estilos se mantienen igual */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.edit-btn, .update-btn, .cancel-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-    font-size: 14px;
 }
 
-.edit-button:hover {
-    background-color: #BBEE00;
+.edit-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
 }
 
-.hidden {
-    display: none;
+.update-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    margin-top: 10px;
+}
+
+.message {
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
 }

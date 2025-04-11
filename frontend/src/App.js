@@ -25,89 +25,89 @@ function App() {
           <Routes>
             <Route path="/" element={
               <>
-                <PageTitle title="Inicio - Kod Estudio" />
+                <PageTitle title="Inicio - Synaptech" />
                 <Home />
               </>
             } />
             <Route path="/sobre-nosotros" element={
               <div className="container py-5">
-                <PageTitle title="Sobre Nosotros - Kod Estudio" />
+                <PageTitle title="Sobre Nosotros - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <About />
               </div>
             } />
             <Route path="/simulador" element={
               <div className="container py-5">
-                <PageTitle title="Simulador de Proyectos - Kod Estudio" />
+                <PageTitle title="Simulador de Proyectos - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <Simulador />
               </div>
             } />
             <Route path="/perfil" element={
               <div className="container py-5">
-                <PageTitle title="Perfil - Kod Estudio" />
+                <PageTitle title="Perfil - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <Perfil />
               </div>
             } />
             <Route path="/requirements" element={
               <div className="container py-5">
-                <PageTitle title="Nueva Solicitud - Kod Estudio" />
+                <PageTitle title="Nueva Solicitud - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <RequirementsForm />
               </div>
             } />
             <Route path="/requirements-list" element={
               <div className="container py-5">
-                <PageTitle title="Lista de Solicitudes - Kod Estudio" />
+                <PageTitle title="Lista de Solicitudes - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <RequirementList />
               </div>
             } />
             <Route path="/edit-requirement/:id" element={
               <div className="container py-5">
-                <PageTitle title="Editar Solicitud - Kod Estudio" />
+                <PageTitle title="Editar Solicitud - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <RequirementsForm />
               </div>
             } />
             <Route path="/clientes" element={
               <div className="container py-5">
-                <PageTitle title="Nuevo Cliente - Kod Estudio" />
+                <PageTitle title="Nuevo Cliente - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesForm />
               </div>
             } />
             <Route path="/clientes-list" element={
               <div className="container py-5">
-                <PageTitle title="Lista de Clientes - Kod Estudio" />
+                <PageTitle title="Lista de Clientes - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesList />
               </div>
             } />
             <Route path="/edit-cliente/:id" element={
               <div className="container py-5">
-                <PageTitle title="Editar Cliente - Kod Estudio" />
+                <PageTitle title="Editar Cliente - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <ClientesForm />
               </div>
             } />
             <Route path="/login" element={
               <div className="container py-5">
-                <PageTitle title="Iniciar Sesión - Kod Estudio" />
+                <PageTitle title="Iniciar Sesión - Synaptech" />
                 <div className="d-flex justify-content-between align-items-center mb-4"></div>
                 <Login />
               </div>
             } />
             <Route path="/logout" element={
               <>
-                <PageTitle title="Cerrar Sesión - Kod Estudio" />
+                <PageTitle title="Cerrar Sesión - Synaptech" />
                 <Logout />
               </>
             } />
             <Route path="/registro" element={
               <>
-                <PageTitle title="Registro - Kod Estudio" />
+                <PageTitle title="Registro - Synaptech" />
                 <Registro />
               </>
             } />

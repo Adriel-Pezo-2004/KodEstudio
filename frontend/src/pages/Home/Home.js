@@ -69,7 +69,7 @@ const Home = () => {
                 animate="visible"
                 variants={slideInFromLeft}
               >
-                Bienvenidos a Kod Estudio
+                Bienvenidos a Synaptech
               </motion.h1>
               <motion.p 
                 className="lead text-white mb-4"

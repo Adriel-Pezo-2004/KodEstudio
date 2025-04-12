@@ -42,7 +42,7 @@ const Carrusel = () => {
     };
 
     fetchReviews();
-  }, []);
+  }, [staticReviews]);
 
   // Usar reviews de la API o los estáticos si hay error
   const reviewsToShow = reviews.length > 0 ? reviews : staticReviews;

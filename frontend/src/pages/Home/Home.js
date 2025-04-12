@@ -129,6 +129,12 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <section className="reviews-section py-5">
+        <div className="container">
+          <h1 className="text-center mb-5 lenguajes-title">¿Qué opinan nuestros clientes?</h1>
+          <Carrusel />
+        </div>
+      </section>
       <section className="reviews-section py-1">
         <div className="container">
           <div className="row align-items-center">
